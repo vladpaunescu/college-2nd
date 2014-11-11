@@ -19,22 +19,6 @@ public class ConvexCover {
     initializeData();
   }
 
-  private void initializeData() {
-    for (int i = 0; i < n; ++i) {
-      nodes.add(new Vertex(i, matrix));
-      int nextNode = getNextNode(i);
-      matrix[i][nextNode] = 1;
-      matrix[nextNode][i] = 1;
-    }
-  }
-
-  private int getNextNode(int node) {
-    if (node < n - 1) {
-      return node + 1;
-    }
-    return 0;
-  }
-
   public void run() throws InterruptedException {
     LOGGER.info("Starting nodes...");
     for (Vertex node : nodes) {
@@ -48,6 +32,22 @@ public class ConvexCover {
 
     LOGGER.info("The vertex cover for " + n + " nodes is (adj matrix)");
     printMatrix(matrix);
+  }
+
+  private int getNextNode(int node) {
+    if (node < n - 1) {
+      return node + 1;
+    }
+    return 0;
+  }
+
+  private void initializeData() {
+    for (int i = 0; i < n; ++i) {
+      nodes.add(new Vertex(i, matrix));
+      int nextNode = getNextNode(i);
+      matrix[i][nextNode] = 1;
+      matrix[nextNode][i] = 1;
+    }
   }
 
   private void printMatrix(int[][] mat) {
