@@ -1,0 +1,62 @@
+Consider an environment with N economic agents (N >= 20) that make the 
+same product.
+
+Parameters for an agent are: initial sum of money, money spent for 
+advertising, quality of the advertising, the number of products for
+which the agent has the profit equal to 0.
+
+Global parameters:
+
+1) the number of products requested by the market;
+
+2) the minimum number of products that must be made by 
+an agent in order to remain in the market in the following year
+(this works even if the agent has negative profit in the current year) = nMin.
+
+Remarks:
+
+1) an agent can have negative profit for a given period of 
+time if it can afford to maintain the production of nMin products in each
+year of that period;
+
+2) if an agent produces, in the current year, a number of products 
+lower than nMin, then that agent disappears from the market starting
+with the following year;
+
+3) we consider that all the agents make their products with the 
+same quality (not necessarily with the same cost);
+
+4) when choosing the seller agent, the clients analyze: the 
+price of the product, the quality of the advertising. Here, you must find a 
+formula (price of the product, quality of the advertising) that will be used
+by the buyers. We consider that the buyers are replaced by a single big
+buyer that wants to buy all the products "requested by the market". 
+This big buyer chooses the seller agents based on the previous discussed formula.
+
+5) periodically, the number of products requested by the market modifies;
+
+6) you can add new parameters in the system, but you must motivate 
+ther necessity.
+
+Homework requirements:
+
+The homework asks to simulate the evolution of the economic environment for 
+a given number of years. In the end, you must observe to which of the 
+following states corresponds the final state of the environment:
+
+1. monopoly (n = 1);
+
+2. duopoly (n = 2);
+
+3. oligopoly (n = 3 ... 5);
+
+4. balanced economy (n >= 6),
+
+where n is the final number of agents in the environment.
+
+I recommend the use of 3-4 profiles of agents (ex: look for risk, 
+avoid risks, balanced, ...). Also, for each profile, you must have 
+approximately the same number of agents. In the end, a conclusion 
+about the best profile must be obtained.
+
+Last modified: Friday, 24 October 2014, 8:37 PM

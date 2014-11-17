@@ -61,7 +61,7 @@ public class ConvexCover {
   }
 
   public static void main(String[] args) throws InterruptedException {
-    int n = 20;
+    int n = 5;
     ConvexCover cover = new ConvexCover(n);
     cover.run();
   }
