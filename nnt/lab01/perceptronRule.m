@@ -13,15 +13,19 @@ for i = 1:size(set, 1)
 end
 % consider all possible scenarios one vs all
 target = [];
+best_match = 1;
 for i = 1: size(set, 1)
     target = (t == i) - (t ~= i);
     [success, w] = runPerceptron(x, target);
   %  drawPlot(x, target, w);
     if success
+        best_match = i;
         break;
     end 
 end
 disp(sprintf('Best match for weights %f', w));
+disp(sprintf('Best match is at index %d', best_match));
+disp(sprintf('Target is %s' , set{best_match}));
 drawPlot(x, target, w);
 
 end
@@ -61,12 +65,12 @@ function drawPlot(x, target, w)
     line(x(:,1), (-(w(1) * x(:,1) + w(3) * x(:,3) ...
                  + w(4) * x(:,4))) / w(2));
              
-    x_min = min(x(:, 1)) - 1;
-    x_max = max(x(:, 1)) + 1;
-    y_min = min(x(:, 2)) - 1;
-    y_max = max(x(:, 2)) + 1;
-    [xx, yy] = meshgrid(linspace(x_min, x_max, 1000), ...
-        linspace(y_min, y_max, 1000));
-    contourf(x(:,1), x(:,2), 
-    hold off;
+%     x_min = min(x(:, 1)) - 1;
+%     x_max = max(x(:, 1)) + 1;
+%     y_min = min(x(:, 2)) - 1;
+%     y_max = max(x(:, 2)) + 1;
+%     [xx, yy] = meshgrid(linspace(x_min, x_max, 1000), ...
+%         linspace(y_min, y_max, 1000));
+%     contourf(x(:,1), x(:,2), 
+%     hold off;
 end

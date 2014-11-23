@@ -1,0 +1,59 @@
+Homework 2
+We consider an environment with N crickets and M parasites. 
+The parasites can destroy a part of the crickets eggs only if
+the life cycle of the crickets starts at the same time with 
+the life cycle of the parasites (this situation is called 'the
+meeting of the crickets with the parasites').
+In this case, z% of the crickets eggs are destroyed. 
+Note that the parasites can lay eggs only if they meet cricket eggs.
+
+We denote by 'cvi_c' the initial life cycle of the crickets and with
+'cvi_p' the initial life cycle of the parasites. 
+The two values are expressed in years (for example, cvi_c = 5, cvi_p = 2).
+
+At the beginning of each life cycle (of the crickets)
+the number of crickets is increased with val_c% crickets
+(than in the previous generation).
+
+At the beginning of each life cycle (of the parasites)
+the number of parasites is increased with val_p% parasites
+ (than in the previous generation).
+
+After they lay eggs, both the crickets and the parasites
+(from the previous generation) die.
+Cricket mutations (only when they meet the parasites):
+
+- xc% increase their life cycle with 1 year
+
+- yc% keep the same life cycle
+
+(100 - xc% - yc%) decrease their life cycle with 1 year
+
+Parasites mutations (only when they don't meet the crickets):
+
+- xp% increase their life cycle with 1 year
+
+- yp% keep the same life cycle
+
+- (100 - xp% - yp%) decrease their life cycle with 1 year
+
+If a population of parasites doesn't meet crickets for nc life cycles,
+then that  population disappears.
+We consider that if a population of parasites doesn't meet
+crickets at the end of its life cycle, then the parasites 
+live one more life cycle and then they try again to lay eggs.
+This continuation of the life of the parasites cannot exceed nc life cycles.
+
+Create a simulation program (only one thread) for this environment.
+
+The program must run until one of the following condition is accomplished:
+- the crickets disappear
+- the parasites disappear
+- if the simulation takes too long, a maximum number of steps might be the stopping condition
+
+The simulation results should be the final life cycles of the
+insects that are still alive (crickets or parasites, respectively) and the moment when the other species disappears.  
+
+For better analyzing the environment, it is recommended that the
+simulation program also display some intermediate results
+related with the evolution of the two types of populations.
