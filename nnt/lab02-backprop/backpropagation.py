@@ -27,7 +27,7 @@ errors_lock = Lock()
 '''
 
 
-class BackPropagationNeuralNetwork(Thread):
+class BackPropagationNeuralNetworks(Thread):
 
     OUTPUT_NODE_COUNT = 10
     TRAINING_PERCENTAGE = 65.0
@@ -176,7 +176,7 @@ class BackPropagationNeuralNetwork(Thread):
         print_debug(message, " total ", iteration_no, absolute_error, relative_error)
         return [er / len(data_set) * 100 for er in absolute_error, relative_error]
 
-    def feed_forward(self, attribute):
+    def feed_forwards(self, attribute):
         inputs = attribute[:-1]
         # print_debug(inputs)
 

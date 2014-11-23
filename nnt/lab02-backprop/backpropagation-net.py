@@ -2,10 +2,12 @@ __author__ = 'vlad'
 #!/usr/bin/python
 import math
 import os
+import numpy as np
 
 from threading import Thread, Lock
+from random import randrange
+import random as rnd
 from copy import deepcopy
-from itertools import izip
 
 from numpy import array, arange
 from numpy import random, dot
@@ -15,10 +17,10 @@ from numpy import random, dot
 from read_mnist import read_images
 
 # comment this to disable debug printing
-DEBUG = True
+DEBUG = False
 INFO = True
 
-errors = {}
+errors_net = {}
 
 print_lock = Lock()
 errors_lock = Lock()
@@ -29,10 +31,10 @@ errors_lock = Lock()
     to adjust weights. Weights are adjusted using stochastic gradient descent.
 '''
 
-
 class BackPropagationNeuralNetwork(Thread):
 
     OUTPUT_NODE_COUNT = 10
+    BATCH_SIZE = 1000
 
     def __init__(self, t_id, no_iterations, eta, train_set, valid_set, hidden_layer_count,
                  hidden_layers_nodes_count, stop_at_convergence=False):
@@ -70,36 +72,37 @@ class BackPropagationNeuralNetwork(Thread):
         converged = False
         count = 0
         convergence_percentage = self.total_iterations / 10
+
         for i in xrange(self.total_iterations):
+            print "Iteration " + str(i)
             training_errors = self.do_epoch(i)
-            validation_errors = self.compute_validation_error(i)
+            #validation_errors = self.compute_validation_error(i)
+            # self.training_errors.append(training_errors)
+            # self.validation_errors.append(validation_errors)
+            #
+            # print_info("Normalized training error, validation error : {0} {1}".format(training_errors[1],
+            #                                                                      validation_errors[1]))
+            # print_info("Thread id {0} iter {1} |training error - validation error| = " \
+            #       "{2}".format(self.id, i, abs(training_errors[1] - validation_errors[1])))
+            # if validation_errors[1] > 10.0 and float((self.total_iterations - i)) / self.total_iterations < 0.4:
+            #     print_info("Stopping to prevent overfitting |training error - validation error| = ",
+            #                     abs(training_errors[1] - validation_errors[1]))
+            #     break
+            # diff = abs(old_training_errors[1]-training_errors[1]) if i >= 1 else 100
+            # if not converged:
+            #     if diff < 0.1:
+            #         count += 1
+            #     else:
+            #         count = 0
+            #
+            #     if count > convergence_percentage:
+            #         self.iterations_convergence = i
+            #         print_info("Neural net converged at iter {0}. abs diff= {1}", i, diff)
+            #         converged = True
+            #         if self.stop_at_convergence:
+            #             break
 
-            self.training_errors.append(training_errors)
-            self.validation_errors.append(validation_errors)
-
-            print_info("Normalized training error, validation error : {0} {1}".format(training_errors[1],
-                                                                                 validation_errors[1]))
-            print_info("Thread id {0} iter {1} |training error - validation error| = " \
-                  "{2}".format(self.id, i, abs(training_errors[1] - validation_errors[1])))
-            if validation_errors[1] > 10.0 and float((self.total_iterations - i)) / self.total_iterations < 0.4:
-                print_info("Stopping to prevent overfitting |training error - validation error| = ",
-                                abs(training_errors[1] - validation_errors[1]))
-                break
-            diff = abs(old_training_errors[1]-training_errors[1]) if i >= 1 else 100
-            if not converged:
-                if diff < 0.1:
-                    count += 1
-                else:
-                    count = 0
-
-                if count > convergence_percentage:
-                    self.iterations_convergence = i
-                    print_info("Neural net converged at iter {0}. abs diff= {1}", i, diff)
-                    converged = True
-                    if self.stop_at_convergence:
-                        break
-
-            old_training_errors = training_errors
+            # old_training_errors = training_errors
 
         self.test_errors = self.compute_testing_error()
         print_info("Thread id {0} Normalized Test Set error (absolute, relative): {1}".format(self.id,
@@ -141,105 +144,139 @@ class BackPropagationNeuralNetwork(Thread):
         return column
 
     def do_epoch(self, iteration_no):
-        absolute_error = 0.0
-        relative_error = 0.0
+      print_info("Epoch ", iteration_no)
+      absolute_error = 0.0
+      relative_error = 0.0
 
-        for feature_v, target in izip(self.train_features, self.train_targets):
-            outputs = self.feed_forward(feature_v)
-            errors = self.propagate_errors_back(outputs, feature_v, target)
-            break
-            print_debug("Weights ", len(self.weights))
-            print_debug("Output ", outputs)
-            print_debug("Errors ", errors)
-            self.update_weights(outputs, errors)
-            print_debug("output target", outputs[-1], attribute[-1])
-            error = (outputs[-1][0] - attribute[-1]) ** 2
-            absolute_error += error
-            relative_error += error / attribute[-1]
+      ridx_list = rnd.sample(range(len(self.train_features)), self.BATCH_SIZE)
+      for ridx in ridx_list:
+      # for feature_v, target in izip(self.train_features, self.train_targets):
+        outputs = self.feed_forward(self.train_features[ridx])
+        print_info("Outputs ", outputs[-1])
+        print_info("Targets ", self.train_targets[ridx])
 
-            print_debug("training error (abs, rel): ", absolute_error, relative_error)
-        return
-        print_debug("Iteration, training (abs, rel): ", iteration_no, absolute_error, relative_error)
-        return [er / len(self.training_set) * 100 for er in (absolute_error, relative_error)]
+        errors = self.propagate_errors_back(outputs, self.train_targets[ridx])
+        print_debug("Weights ", len(self.weights))
+        print_debug("Output ", outputs)
+        print_debug("Errors sdasdas", errors)
+        self.update_weights(outputs, errors)
+      # print_debug("output target", outputs[-1], attribute[-1])
+      # error = (outputs[-1][0] - attribute[-1]) ** 2
+      # absolute_error += error
+      # relative_error += error / attribute[-1]
+      #
+      # print_debug("training error (abs, rel): ", absolute_error, relative_error)
+      # return
+      # print_debug("Iteration, training (abs, rel): ", iteration_no, absolute_error, relative_error)
+      # return [er / len(self.training_set) * 100 for er in (absolute_error, relative_error)]
 
     def compute_validation_error(self, iteration_no):
-        return self.compute_error(self.validation_set, iteration_no, "Iteration, validation error (abs, rel): ")
+        return self.compute_error(self.valid_features, self.valid_targets, iteration_no, "Iteration, validation error (abs, rel): ")
 
     def compute_testing_error(self):
         return self.compute_error(self.test_set, self.total_iterations, "Test set error (abs, rel): ")
 
-    def compute_error(self, data_set, iteration_no, message):
+    def compute_error(self, features, targets, iteration_no, message):
         absolute_error = 0.0
         relative_error = 0.0
-        for attribute in data_set:
+        ridx = randrange(0, len(features))
+        outputs = self.feed_forward(features[ridx])
+        print_debug("Target " , targets[ridx])
+        target_v = np.zeros(10)
+        target_v[targets[ridx]] = 1
+        print_debug("Target ", target_v)
+        print_debug("Outputs ", outputs[-1])
+        err = sum(abs(outputs[-1] - target_v))
+        print_debug("Errors plms ", err)
+       # print_debug("Sum for validation", sum(outputs[-1]))
+        return err
+        for attribute in features:
             outputs = self.feed_forward(attribute)
-            error = (outputs[-1][0] - attribute[-1]) ** 2
-            absolute_error += error
-            relative_error += error / attribute[-1]
-            print_debug("error (abs, rel):", absolute_error, relative_error)
+            print_debug("Plm", outputs[-1])
 
-        print_debug(message, " total ", iteration_no, absolute_error, relative_error)
-        return [er / len(data_set) * 100 for er in absolute_error, relative_error]
+            return
+            print (outputs[-1] - attribute[-1]) ** 2
+            # absolute_error += error
+            # relative_error += error / attribute[-1]
+            # print_debug("error (abs, rel):", absolute_error, relative_error)
+
+        # print_debug(message, " total ", iteration_no, absolute_error, relative_error)
+        # return [er / len(data_set) * 100 for er in absolute_error, relative_error]
 
     def feed_forward(self, attribute):
-        inputs = attribute
-        # print_debug(inputs)
+      inputs = np.insert(attribute, 0, 1)
+      # print_debug(inputs)
 
-        output = inputs
-        outputs = [output]
-        for layer_weights in self.weights:
-            layer_inputs = self.compute_inputs(output, layer_weights)
-            output = [sigmoid(neuron_input) for neuron_input in layer_inputs]
-            outputs.append(output)
+      output = inputs
+      outputs = [output]
+      for layer_weights in self.weights:
+        print_info("Layer weights", layer_weights.shape)
+        layer_inputs = self.compute_inputs(output, layer_weights)
+        output = [sigmoid(neuron_input) for neuron_input in layer_inputs]
+        output = np.insert(output, 0, 1)
+        print_info("output sss ", len(output))
+        outputs.append(output)
 
-        print_debug("All outputs ", outputs)
-        print_debug("Final output ", output)
-        return outputs
+      print_debug("All outputs ", outputs)
+      print_debug("Final output ", output)
+      outputs[-1] = self.normalize_vector(outputs[-1])
+      print_debug("Outputs ", outputs[-1])
+      return outputs
 
     def compute_inputs(self, output, layer_weights):
-        print_debug("Output: ", output)
-        print_debug("first node incident weights: ", layer_weights[0, :])
-        print_debug("First node dot product", dot(output, layer_weights[0, :]))
-        linear_combinations = [dot(output, w_ij) for w_ij in layer_weights]
-        print_debug("All dot products ", linear_combinations)
-        return linear_combinations
+      print_info("Output eraeraeS: ", output)
+      print_debug("first node incident weights: ", layer_weights[0, :])
+      print_debug("First node dot product", dot(output, layer_weights[0, :]))
+      linear_combinations = [dot(output, w_ij) for w_ij in layer_weights]
+      print_debug("All dot products ", linear_combinations)
+      return linear_combinations
 
-    def propagate_errors_back(self, outputs, attribute):
+    def propagate_errors_back(self, outputs, target):
+      deltas = []
 
-        target = attribute[-1]
-        deltas = []
+      # compute the delta for the output units
+      output = outputs[-1]
+      target_v = np.zeros(10)
+      target_v[target] = 1
+      print_info("Target ", target, target_v)
+      print_debug("Computing delta for output units")
+      print_debug("Output layer output ", output)
+      delta = []
 
-        # compute the delta for the output units
-        output = outputs[-1]
-        print_debug("Computing delta for output units")
-        print_debug("Output layer output ", output)
-        delta = []
-        for o_i in xrange(self.node_count[-1]):
-            derivative = output[o_i] * (1 - output[o_i])
-            delta.append(derivative * (target - output[o_i]))
-            print_debug("Output layer delta ", delta)
-            deltas.append(delta)
+      for o_i in xrange(self.node_count[-1]):
+        derivative = output[o_i] * (1 - output[o_i])
+        delta.append(derivative * (target_v[o_i] - output[o_i]))
+        print_info("Output layer delta ", delta)
+        deltas.append(delta)
 
-        # compute the error term for the hidden units
-        print_debug("Computing error terms for the hidden units")
+      # compute the error term for the hidden units
+      print_debug("Computing error terms for the hidden units")
 
-        # for all hidden outputs in reverse order, but not for first output
-        layers = range(self.hidden_layer_count, -1, -1)
-        print_debug("Layers list ", layers)
-        print_debug("Outputs ", outputs[-2:0:-1])
-        for l_idx, l_output in zip(layers, outputs[-2:0:-1]):
-            delta = []
-            for node_idx, node_output in enumerate(l_output):
-                derivative = node_output * (1 - node_output)
-                delta.append(derivative * self.compute_weighted_delta(l_idx, node_idx, deltas[-1]))
-            deltas.append(delta)
+      # for all hidden outputs in reverse order, but not for first output
+      layers = range(self.hidden_layer_count, -1, -1)
+      print_debug("Layers list ", layers)
+      print_debug("Outputs ", outputs[-2:0:-1])
+      for l_idx, l_output in zip(layers, outputs[-2:0:-1]):
+          print_info("Layer output ", len(l_output))
+          delta = []
+          for node_idx, node_output in enumerate(l_output):
+              derivative = node_output * (1 - node_output)
+              delta.append(derivative * self.compute_weighted_delta(l_idx, node_idx, deltas[-1]))
+          deltas.append(delta)
 
-        deltas.reverse()
-        return deltas
+      deltas.reverse()
+      return deltas
+
+    def normalize_vector(self, vector):
+      print_debug("Vector ", vector)
+      vector = np.array(vector)
+      print_debug("Vector ", vector)
+      return (vector / sum(vector)).tolist()
 
     def update_weights(self, outputs, errors):
         for layer in xrange(len(self.weights)):
             l_weights = self.weights[layer]
+            print_info("Layer weights ", l_weights.shape, len(l_weights), len(l_weights[0]))
             for i_w in xrange(len(l_weights)):
                 for j_w in xrange(len(l_weights[i_w])):
                     delta_w = errors[layer][i_w] * outputs[layer][j_w]
@@ -260,16 +297,21 @@ class BackPropagationNeuralNetwork(Thread):
     i -  the node from the current layer (incident neuron)
     j - the node of  the previous layer (emergent neuron)
 
+    extra: added bias nodes with no incident weights
+    w[l][i][0] makes sense
+    w[l][0][j] does not make sense
+
     W[L][i][j] - the weight from jth node on layer L-1 to ith node on layer L.
     """
     def init_weights(self):
         weights = []
         for level in xrange(self.total_layers):
-            weights_l = random.random((self.node_count[level + 1], self.node_count[level])) - 0.5
+            weights_l = random.random((self.node_count[level + 1], self.node_count[level] + 1)) - 0.5
+            print_info("layer ", level, self.node_count[level + 1], self.node_count[level])
             weights.append(weights_l)
 
         for w in weights:
-            print_debug(w)
+            print_debug(w.shape)
 
         return array(weights)
 
@@ -300,7 +342,7 @@ class BackPropagationNeuralNetwork(Thread):
 
     def write_errors(self):
         errors_lock.acquire()
-        errors[self.id] = [self.hidden_layer_count, self.node_count,
+        errors_net[self.id] = [self.hidden_layer_count, self.node_count,
                            self.training_errors, self.validation_errors,
                            self.test_errors, self.iterations_convergence]
         errors_lock.release()
@@ -431,14 +473,14 @@ def test_for_multiple_layers_variable_neurons():
 
     print_info("All nets finished. Doing plots")
     data = []
-    for thread_id in errors:
+    for thread_id in errors_net:
 
         # errors[self.id] = [self.hidden_layer_count, self.node_count,
         #                    self.training_errors, self.validation_errors,
         #                    self.test_errors, self.iterations_convergence]
 
         print_info("Plotting for thread id ", thread_id)
-        net_errors = errors[thread_id]
+        net_errors = errors_net[thread_id]
         hidden_layer_count, node_count = net_errors[0], net_errors[1]
         training_errors, validation_errors = net_errors[2], net_errors[3]
         test_errors, iterations_convergence = net_errors[4], net_errors[5]
@@ -496,14 +538,14 @@ def test_few_nets():
 
     print_info("All nets finished. Doing plots")
 
-    for thread_id in errors:
+    for thread_id in errors_net:
 
         # errors[self.id] = [self.hidden_layer_count, self.node_count,
         #                    self.training_errors, self.validation_errors,
         #                    self.test_errors, self.iterations_convergence]
 
         print_info("Plotting for thread id ", thread_id)
-        net_errors = errors[thread_id]
+        net_errors = errors_net[thread_id]
         training_errors, validation_errors = net_errors[2], net_errors[3]
         test_errors, iterations_convergence = net_errors[4], net_errors[5]
 
@@ -513,7 +555,8 @@ def test_few_nets():
 
 if __name__ == "__main__":
   [train_set, valid_set, test_set] = read_images('/home/vlad/Documents/datasets/mnist.pkl.gz')
-  net1 = BackPropagationNeuralNetwork(1, 200, 0.3, train_set, valid_set, hidden_layer_count=1, hidden_layers_nodes_count=[6])
+  net1 = BackPropagationNeuralNetwork(1, 200, 0.3, train_set, valid_set, hidden_layer_count=1,
+                                      hidden_layers_nodes_count=[6])
   print train_set[1].shape
   net1.start()
   net1.join()
