@@ -71,14 +71,10 @@ class BackPropagationNeuralNetwork(Thread):
         print "Thread id = {0}\n{1}".format(self.id, self.train_features[0])
         self.iterations_convergence = self.total_iterations
 
-        converged = False
-        count = 0
-        convergence_percentage = self.total_iterations / 10
-
         for i in xrange(self.total_iterations):
             print "Iteration " + str(i)
             training_errors = self.do_epoch(i)
-            print_info("Computing mispredictions")
+            print_info(self.id, " Computing mispredictions")
             predictions = 0
             idx = 0
             for example, target in izip(self.train_features, self.train_targets):
@@ -90,35 +86,7 @@ class BackPropagationNeuralNetwork(Thread):
               if idx >= self.batch_size:
                 break
 
-            print_info("Prediction count ", predictions, float(predictions)/self.batch_size)
-
-            #validation_errors = self.compute_validation_error(i)
-            # self.training_errors.append(training_errors)
-            # self.validation_errors.append(validation_errors)
-            #
-            # print_info("Normalized training error, validation error : {0} {1}".format(training_errors[1],
-            #                                                                      validation_errors[1]))
-            # print_info("Thread id {0} iter {1} |training error - validation error| = " \
-            #       "{2}".format(self.id, i, abs(training_errors[1] - validation_errors[1])))
-            # if validation_errors[1] > 10.0 and float((self.total_iterations - i)) / self.total_iterations < 0.4:
-            #     print_info("Stopping to prevent overfitting |training error - validation error| = ",
-            #                     abs(training_errors[1] - validation_errors[1]))
-            #     break
-            # diff = abs(old_training_errors[1]-training_errors[1]) if i >= 1 else 100
-            # if not converged:
-            #     if diff < 0.1:
-            #         count += 1
-            #     else:
-            #         count = 0
-            #
-            #     if count > convergence_percentage:
-            #         self.iterations_convergence = i
-            #         print_info("Neural net converged at iter {0}. abs diff= {1}", i, diff)
-            #         converged = True
-            #         if self.stop_at_convergence:
-            #             break
-
-            # old_training_errors = training_errors
+            print_info(self.id, " Prediction count ", predictions, float(predictions)/self.batch_size)
 
         self.test_errors = self.compute_testing_error()
         print_info("Thread id {0} Normalized Test Set error (absolute, relative): {1}".format(self.id,
@@ -133,15 +101,15 @@ class BackPropagationNeuralNetwork(Thread):
         print "Total itartions count ", self.total_iterations
         print_lock.release()
 
-
     def do_epoch(self, iteration_no):
-      print_info("Epoch ", iteration_no)
-      absolute_error = 0.0
-      relative_error = 0.0
-
+      print_info(self.id, " Epoch ", iteration_no)
       ridx_list = xrange(self.batch_size) #rnd.sample(range(len(self.train_features)), self.batch_size)
+      count = 0
       for ridx in ridx_list:
         print_debug("Optimizing for example ", ridx)
+        if count % 5000 == 0:
+          print_info(self.id, " Example ", count)
+
       # for feature_v, target in izip(self.train_features, self.train_targets):
         outputs = self.feed_forward(self.train_features[ridx])
         print_debug("Outputs ", outputs[-1])
@@ -152,17 +120,7 @@ class BackPropagationNeuralNetwork(Thread):
         print_debug("Output ", outputs)
         print_debug("Errors sdasdas", errors)
         self.update_weights(outputs, errors)
-
-
-      # print_debug("output target", outputs[-1], attribute[-1])
-      # error = (outputs[-1][0] - attribute[-1]) ** 2
-      # absolute_error += error
-      # relative_error += error / attribute[-1]
-      #
-      # print_debug("training error (abs, rel): ", absolute_error, relative_error)
-      # return
-      # print_debug("Iteration, training (abs, rel): ", iteration_no, absolute_error, relative_error)
-      # return [er / len(self.training_set) * 100 for er in (absolute_error, relative_error)]
+        count += 1
 
     def compute_validation_error(self, iteration_no):
         return self.compute_error(self.valid_features, self.valid_targets, iteration_no, "Iteration, validation error (abs, rel): ")
@@ -186,7 +144,7 @@ class BackPropagationNeuralNetwork(Thread):
 
       print_debug("All outputs ", outputs)
       print_debug("Final output ", output)
-      outputs[-1] = self.normalize_vector(outputs[-1])
+      #outputs[-1] = self.normalize_vector(outputs[-1])
       print_debug("Outputs ", outputs[-1])
       return outputs
 
@@ -283,31 +241,6 @@ class BackPropagationNeuralNetwork(Thread):
             print_info(w.shape)
 
         return array(weights)
-
-    def split_training_attributes(self):
-        print "Splitting examples in training set, validation set, and test set"
-        total_count = len(self.normalized_values)
-        print "Total examples count {0}".format(total_count)
-        print "Shuffling example set"
-        random.shuffle(self.normalized_values)
-
-        training_count = int(math.floor(total_count * self.TRAINING_PERCENTAGE / 100.0))
-        validation_count = int(math.floor(total_count * self.VALIDATION_PERCENTAGE / 100.0))
-        test_count = int(total_count - training_count - validation_count)
-
-        print "Training count: {0}".format(training_count)
-        print "Validation count: {0}".format(validation_count)
-        print "Test count: {0}".format(test_count)
-        print total_count, training_count + validation_count + test_count
-
-        offset = 0
-        training_set = self.normalized_values[offset: offset + training_count]
-        offset += training_count
-        validation_set = self.normalized_values[offset: offset + validation_count]
-        offset += validation_count
-        test_set = self.normalized_values[offset: offset + test_count]
-        print_debug(len(training_set), len(validation_set), len(test_set))
-        return [training_set, validation_set, test_set]
 
     def write_errors(self):
         errors_lock.acquire()
@@ -527,12 +460,14 @@ def test_few_nets():
 if __name__ == "__main__":
   [train_set, valid_set, test_set] = read_images('/home/vlad/Documents/datasets/mnist.pkl.gz')
   net1 = BackPropagationNeuralNetwork(1, 200, 0.3, train_set, valid_set, hidden_layer_count=1,
-                                      hidden_layers_nodes_count=[12])
-  print train_set[1].shape
+                                      hidden_layers_nodes_count=[6])
+  net2 = BackPropagationNeuralNetwork(2, 200, 0.3, train_set, valid_set, hidden_layer_count=1,
+                                      hidden_layers_nodes_count=[60])
+
   net1.start()
+ # net2.start()
   net1.join()
-  # net1.start()
-    # net2.start()
+  net2.join()
     # net3.start()
 
     # for t in threads:
