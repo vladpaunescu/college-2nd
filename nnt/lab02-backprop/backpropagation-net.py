@@ -43,7 +43,7 @@ class BackPropagationNeuralNetwork(Thread):
         self.train_set, self.valid_set = deepcopy(train_set), deepcopy(valid_set)
         self.train_features, self.train_targets = self.train_set[0], self.train_set[1]
         self.valid_features, self.valid_targets = self.valid_set[0], self.valid_set[1]
-        self.batch_size = self.train_features.shape[0] / 10
+        self.batch_size = self.train_features.shape[0]
         print_info("Batch size ", self.batch_size)
 
         self.hidden_layer_count = hidden_layer_count
@@ -126,18 +126,6 @@ class BackPropagationNeuralNetwork(Thread):
 
         self.write_errors()
 
-    def normalize_inputs(self):
-        inputs = self.attrib_values
-        normalized_inputs = []
-        for column in inputs.T:
-            normalized_col = self.normalize_input(column)
-            normalized_inputs.append(normalized_col)
-
-        normalized_inputs = array(normalized_inputs).T
-        print_debug("Normalized inputs: ", normalized_inputs)
-        print_debug("Target inputs", normalized_inputs[:, -1])
-        return normalized_inputs
-
     def display_info(self):
         print_lock.acquire()
         print "Starting Thread for Neural Network with id ", self.id
@@ -145,19 +133,6 @@ class BackPropagationNeuralNetwork(Thread):
         print "Total itartions count ", self.total_iterations
         print_lock.release()
 
-    """
-    The normalized value Norm(e[i]) = (e[i]-Emin)/(E_max - E_min)
-    """
-    def normalize_input(self, column):
-        print_debug("Original col: ", column)
-        min_val = min(column)
-        max_val = max(column)
-        print_debug("Min value ", min_val, " Max val: ", max_val)
-
-        # normalize to [0.1, 0.9]
-        column = [(el - min_val) / (max_val - min_val) * 0.8 + 0.1 for el in column]
-        print_debug("Normalized column ", column)
-        return column
 
     def do_epoch(self, iteration_no):
       print_info("Epoch ", iteration_no)
@@ -195,39 +170,12 @@ class BackPropagationNeuralNetwork(Thread):
     def compute_testing_error(self):
         return self.compute_error(self.test_set, self.total_iterations, "Test set error (abs, rel): ")
 
-    def compute_error(self, features, targets, iteration_no, message):
-        absolute_error = 0.0
-        relative_error = 0.0
-        ridx = randrange(0, len(features))
-        outputs = self.feed_forward(features[ridx])
-        print_debug("Target " , targets[ridx])
-        target_v = np.zeros(10)
-        target_v[targets[ridx]] = 1
-        print_debug("Target ", target_v)
-        print_debug("Outputs ", outputs[-1])
-        err = sum(abs(outputs[-1] - target_v))
-        print_debug("Errors plms ", err)
-       # print_debug("Sum for validation", sum(outputs[-1]))
-        return err
-        for attribute in features:
-            outputs = self.feed_forward(attribute)
-            print_debug("Plm", outputs[-1])
-
-            return
-            print (outputs[-1] - attribute[-1]) ** 2
-            # absolute_error += error
-            # relative_error += error / attribute[-1]
-            # print_debug("error (abs, rel):", absolute_error, relative_error)
-
-        # print_debug(message, " total ", iteration_no, absolute_error, relative_error)
-        # return [er / len(data_set) * 100 for er in absolute_error, relative_error]
-
     def feed_forward(self, attribute):
       # print_debug(inputs)
       output = attribute
       outputs = []
       for layer_weights in self.weights:
-        output = np.insert(output, 0, 1)
+       # output = np.insert(output, 0, 1)
         outputs.append(output)
         print_debug("Layer weights", layer_weights.shape)
         layer_inputs = self.compute_inputs(output, layer_weights)
@@ -266,7 +214,6 @@ class BackPropagationNeuralNetwork(Thread):
       print_debug("Computing delta for output units")
       print_debug("Output layer output ", output)
       delta = []
-
       for o_i in xrange(self.node_count[-1]):
         derivative = output[o_i] * (1 - output[o_i])
         delta.append(derivative * (target_v[o_i] - output[o_i]))
@@ -281,7 +228,6 @@ class BackPropagationNeuralNetwork(Thread):
       print_debug("Layers list ", layers)
       print_debug("Outputs ", outputs[-2:0:-1])
       for l_idx, l_output in zip(layers, outputs[-2:0:-1]):
-          print_debug("Layer output ", len(l_output))
           delta = []
           for node_idx, node_output in enumerate(l_output):
               derivative = node_output * (1 - node_output)
@@ -322,15 +268,14 @@ class BackPropagationNeuralNetwork(Thread):
     j - the node of  the previous layer (emergent neuron)
 
     extra: added bias nodes with no incident weights
-    w[l][i][0] makes sense
-    w[l][0][j] does not make sense
+
 
     W[L][i][j] - the weight from jth node on layer L-1 to ith node on layer L.
     """
     def init_weights(self):
         weights = []
         for level in xrange(self.total_layers):
-            weights_l = random.random((self.node_count[level + 1], self.node_count[level] + 1)) - 0.5
+            weights_l = random.random((self.node_count[level + 1], self.node_count[level])) - 0.5
             print_debug("layer ", level, self.node_count[level + 1], self.node_count[level])
             weights.append(weights_l)
 
