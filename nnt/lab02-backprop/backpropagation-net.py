@@ -1,12 +1,12 @@
+from itertools import izip
+
 __author__ = 'vlad'
 #!/usr/bin/python
-import math
 import os
 import numpy as np
 
 from threading import Thread, Lock
 from random import randrange
-import random as rnd
 from copy import deepcopy
 
 from numpy import array, arange
@@ -34,7 +34,7 @@ errors_lock = Lock()
 class BackPropagationNeuralNetwork(Thread):
 
     OUTPUT_NODE_COUNT = 10
-    BATCH_SIZE = 1000
+    #BATCH_SIZE = 60000
 
     def __init__(self, t_id, no_iterations, eta, train_set, valid_set, hidden_layer_count,
                  hidden_layers_nodes_count, stop_at_convergence=False):
@@ -43,6 +43,8 @@ class BackPropagationNeuralNetwork(Thread):
         self.train_set, self.valid_set = deepcopy(train_set), deepcopy(valid_set)
         self.train_features, self.train_targets = self.train_set[0], self.train_set[1]
         self.valid_features, self.valid_targets = self.valid_set[0], self.valid_set[1]
+        self.batch_size = self.train_features.shape[0] / 10
+        print_info("Batch size ", self.batch_size)
 
         self.hidden_layer_count = hidden_layer_count
         self.total_layers = hidden_layer_count + 1
@@ -76,6 +78,20 @@ class BackPropagationNeuralNetwork(Thread):
         for i in xrange(self.total_iterations):
             print "Iteration " + str(i)
             training_errors = self.do_epoch(i)
+            print_info("Computing mispredictions")
+            predictions = 0
+            idx = 0
+            for example, target in izip(self.train_features, self.train_targets):
+              prediction = self.predict(example)
+              #print_info("Prediction, Actual ", prediction, target)
+              if prediction == target:
+                predictions += 1
+              idx += 1
+              if idx >= self.batch_size:
+                break
+
+            print_info("Prediction count ", predictions, float(predictions)/self.batch_size)
+
             #validation_errors = self.compute_validation_error(i)
             # self.training_errors.append(training_errors)
             # self.validation_errors.append(validation_errors)
@@ -148,18 +164,21 @@ class BackPropagationNeuralNetwork(Thread):
       absolute_error = 0.0
       relative_error = 0.0
 
-      ridx_list = rnd.sample(range(len(self.train_features)), self.BATCH_SIZE)
+      ridx_list = xrange(self.batch_size) #rnd.sample(range(len(self.train_features)), self.batch_size)
       for ridx in ridx_list:
+        print_debug("Optimizing for example ", ridx)
       # for feature_v, target in izip(self.train_features, self.train_targets):
         outputs = self.feed_forward(self.train_features[ridx])
-        print_info("Outputs ", outputs[-1])
-        print_info("Targets ", self.train_targets[ridx])
+        print_debug("Outputs ", outputs[-1])
+        print_debug("Targets ", self.train_targets[ridx])
 
         errors = self.propagate_errors_back(outputs, self.train_targets[ridx])
         print_debug("Weights ", len(self.weights))
         print_debug("Output ", outputs)
         print_debug("Errors sdasdas", errors)
         self.update_weights(outputs, errors)
+
+
       # print_debug("output target", outputs[-1], attribute[-1])
       # error = (outputs[-1][0] - attribute[-1]) ** 2
       # absolute_error += error
@@ -204,18 +223,18 @@ class BackPropagationNeuralNetwork(Thread):
         # return [er / len(data_set) * 100 for er in absolute_error, relative_error]
 
     def feed_forward(self, attribute):
-      inputs = np.insert(attribute, 0, 1)
       # print_debug(inputs)
-
-      output = inputs
-      outputs = [output]
+      output = attribute
+      outputs = []
       for layer_weights in self.weights:
-        print_info("Layer weights", layer_weights.shape)
+        output = np.insert(output, 0, 1)
+        outputs.append(output)
+        print_debug("Layer weights", layer_weights.shape)
         layer_inputs = self.compute_inputs(output, layer_weights)
         output = [sigmoid(neuron_input) for neuron_input in layer_inputs]
-        output = np.insert(output, 0, 1)
-        print_info("output sss ", len(output))
-        outputs.append(output)
+        print_debug("output sss ", len(output))
+
+      outputs.append(output)
 
       print_debug("All outputs ", outputs)
       print_debug("Final output ", output)
@@ -223,8 +242,13 @@ class BackPropagationNeuralNetwork(Thread):
       print_debug("Outputs ", outputs[-1])
       return outputs
 
+    def predict(self, attribute):
+      outputs = self.feed_forward(attribute)
+      print_debug("Ooutputs are ", outputs[-1])
+      return np.argmax(outputs[-1])
+
     def compute_inputs(self, output, layer_weights):
-      print_info("Output eraeraeS: ", output)
+      print_debug("Output eraeraeS: ", output)
       print_debug("first node incident weights: ", layer_weights[0, :])
       print_debug("First node dot product", dot(output, layer_weights[0, :]))
       linear_combinations = [dot(output, w_ij) for w_ij in layer_weights]
@@ -238,7 +262,7 @@ class BackPropagationNeuralNetwork(Thread):
       output = outputs[-1]
       target_v = np.zeros(10)
       target_v[target] = 1
-      print_info("Target ", target, target_v)
+      print_debug("Target ", target, target_v)
       print_debug("Computing delta for output units")
       print_debug("Output layer output ", output)
       delta = []
@@ -246,7 +270,7 @@ class BackPropagationNeuralNetwork(Thread):
       for o_i in xrange(self.node_count[-1]):
         derivative = output[o_i] * (1 - output[o_i])
         delta.append(derivative * (target_v[o_i] - output[o_i]))
-        print_info("Output layer delta ", delta)
+        print_debug("Output layer delta ", delta)
         deltas.append(delta)
 
       # compute the error term for the hidden units
@@ -257,7 +281,7 @@ class BackPropagationNeuralNetwork(Thread):
       print_debug("Layers list ", layers)
       print_debug("Outputs ", outputs[-2:0:-1])
       for l_idx, l_output in zip(layers, outputs[-2:0:-1]):
-          print_info("Layer output ", len(l_output))
+          print_debug("Layer output ", len(l_output))
           delta = []
           for node_idx, node_output in enumerate(l_output):
               derivative = node_output * (1 - node_output)
@@ -268,15 +292,15 @@ class BackPropagationNeuralNetwork(Thread):
       return deltas
 
     def normalize_vector(self, vector):
-      print_debug("Vector ", vector)
+      #print_debug("Vector ", vector)
       vector = np.array(vector)
-      print_debug("Vector ", vector)
+      #print_debug("Vector ", vector)
       return (vector / sum(vector)).tolist()
 
     def update_weights(self, outputs, errors):
         for layer in xrange(len(self.weights)):
             l_weights = self.weights[layer]
-            print_info("Layer weights ", l_weights.shape, len(l_weights), len(l_weights[0]))
+            print_debug("Layer weights ", l_weights.shape, len(l_weights), len(l_weights[0]))
             for i_w in xrange(len(l_weights)):
                 for j_w in xrange(len(l_weights[i_w])):
                     delta_w = errors[layer][i_w] * outputs[layer][j_w]
@@ -307,11 +331,11 @@ class BackPropagationNeuralNetwork(Thread):
         weights = []
         for level in xrange(self.total_layers):
             weights_l = random.random((self.node_count[level + 1], self.node_count[level] + 1)) - 0.5
-            print_info("layer ", level, self.node_count[level + 1], self.node_count[level])
+            print_debug("layer ", level, self.node_count[level + 1], self.node_count[level])
             weights.append(weights_l)
 
         for w in weights:
-            print_debug(w.shape)
+            print_info(w.shape)
 
         return array(weights)
 
@@ -367,7 +391,9 @@ def print_info(*args):
 
 
 def sigmoid(x):
-    return 1 / (1 + math.exp(-x))
+  if x > 100: return 1.0
+  if x< -100: return 0.0
+  return 1 / (1 + np.exp(-x))
 
 
 def is_number(s):
@@ -384,7 +410,7 @@ def replace_string_attrbutes(attribute_values):
         if not is_number(attr):
             string_attrs.append(idx)
 
-    print_info("String attr idxs: ", string_attrs)
+    print_debug("String attr idxs: ", string_attrs)
     for idx in string_attrs:
         col = [el[idx] for el in attribute_values]
         print col
@@ -556,7 +582,7 @@ def test_few_nets():
 if __name__ == "__main__":
   [train_set, valid_set, test_set] = read_images('/home/vlad/Documents/datasets/mnist.pkl.gz')
   net1 = BackPropagationNeuralNetwork(1, 200, 0.3, train_set, valid_set, hidden_layer_count=1,
-                                      hidden_layers_nodes_count=[6])
+                                      hidden_layers_nodes_count=[12])
   print train_set[1].shape
   net1.start()
   net1.join()
