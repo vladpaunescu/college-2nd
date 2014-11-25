@@ -1,12 +1,10 @@
-from itertools import izip
-
 __author__ = 'vlad'
 #!/usr/bin/python
 import os
 import numpy as np
 
 from threading import Thread, Lock
-from random import randrange
+from itertools import izip
 from copy import deepcopy
 
 from numpy import array, arange
@@ -27,7 +25,7 @@ errors_lock = Lock()
 
 
 '''
-    Feed forward neural network with one output that's using backpropagation of error
+    Feed forward neural network with variable # of outputs that's using backpropagation of error
     to adjust weights. Weights are adjusted using stochastic gradient descent.
 '''
 
