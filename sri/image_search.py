@@ -10,14 +10,6 @@ URL_BASE = "https://ajax.googleapis.com/ajax/services/search/images"
 import urllib2
 import simplejson
 
-#
-# request = urllib2.Request(url, None,)
-# response = urllib2.urlopen(request)
-#
-# # Process the JSON string.
-# results = simplejson.load(response)
-# # now have some fun with the results...
-
 def get_page(url):
   req = urllib2.Request(url, None)
   response = urllib2.urlopen(req)
@@ -41,7 +33,6 @@ def search_image(words):
   print url
   get_page(url)
 
-
-
 if __name__ == "__main__":
   search_image(['water', 'park'])
+

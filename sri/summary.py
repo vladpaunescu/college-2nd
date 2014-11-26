@@ -35,11 +35,6 @@ def get_image(sentence):
   print(nouns)
   search_image(nouns)
 
-
-
-
-
-
 if __name__ == "__main__":
   sentences = textrank("test.txt")
   for s in sentences:
