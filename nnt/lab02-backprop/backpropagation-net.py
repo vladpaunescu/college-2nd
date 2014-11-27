@@ -456,7 +456,7 @@ def test_few_nets():
 
 
 if __name__ == "__main__":
-  [train_set, valid_set, test_set] = read_images('/home/vlad/Documents/datasets/mnist.pkl.gz')
+  [train_set, valid_set, test_set] = read_images('/home/vlad/Documents/acs/nnt/mnist.pkl.gz')
   net1 = BackPropagationNeuralNetwork(1, 200, 0.3, train_set, valid_set, hidden_layer_count=1,
                                       hidden_layers_nodes_count=[6])
   net2 = BackPropagationNeuralNetwork(2, 200, 0.3, train_set, valid_set, hidden_layer_count=1,
@@ -465,7 +465,7 @@ if __name__ == "__main__":
   net1.start()
  # net2.start()
   net1.join()
-  net2.join()
+  #net2.join()
     # net3.start()
 
     # for t in threads:
