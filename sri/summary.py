@@ -16,7 +16,6 @@ def textrank(document):
   sentence_tokenizer = PunktSentenceTokenizer()
   sentences = sentence_tokenizer.tokenize(text)
 
-
   bow_matrix = CountVectorizer().fit_transform(sentences)
   normalized = TfidfTransformer().fit_transform(bow_matrix)
 
