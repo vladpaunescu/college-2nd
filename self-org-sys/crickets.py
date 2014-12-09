@@ -114,21 +114,21 @@ def game_over():
 
 def display(round):
 	print "\n\nIter %s" % round
-	print '   parasites:'
-	s = 'Years left   '
+	print '\nparasites:'
+	s = 'Years left '
 	for i in range(len(par)):
 		s += ' ' + str(par[i])
 	print s
-	s = 'Lifes   '
+	s = 'Lifes '
 	for i in range(len(par)):
 		s += ' ' + str(par_life[i])
 	print s
-	print '   crickets:'
-	s = 'Years left   '
+	print '\ncrickets:'
+	s = 'Years left '
 	for i in range(len(cri)):
 		s += ' ' + str(cri[i])
 	print s
-	s = 'Lifes   '
+	s = 'Lifes '
 	for i in range(len(cri)):
 		s += ' ' + str(cri_life[i])
 	print s
