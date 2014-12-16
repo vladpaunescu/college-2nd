@@ -13,28 +13,27 @@ public class Zoo {
   }
 
   public Zoo addAnimal(Animal a) {
-    // animals.add(a);
+    animals.add(a);
     return this;
   }
 
   public boolean removeAnimal(Animal a) {
-    return false;
-    // return animals.remove(a);
+    // return false;
+    return animals.remove(a);
   }
 
   public boolean areAnimals() {
-    return false;
-    // return animals.size() > 0;
+    // return false;
+    return animals.size() > 0;
   }
 
   public List<Animal> getAnimals() {
-    return null;
-    // return animals;
+    // return null;
+    return animals;
   }
 
   public int size() {
-    return 0;
-    // return animals.size();
+    // return 0;
+    return animals.size();
   }
-
 }
