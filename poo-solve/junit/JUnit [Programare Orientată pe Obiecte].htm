@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html dir="ltr" class="js desktop" lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>JUnit [Programare Orientată pe Obiecte]</title>
+    <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)</script>
+    <meta name="generator" content="DokuWiki">
+<meta name="robots" content="noindex,nofollow">
+<meta name="date" content="2014-12-15T13:14:21+0200">
+<meta name="keywords" content="laboratoare,junit">
+<link rel="search" type="application/opensearchdescription+xml" href="http://elf.cs.pub.ro/poo/lib/exe/opensearch.php" title="Programare Orientată pe Obiecte">
+<link rel="start" href="http://elf.cs.pub.ro/poo/">
+<link rel="contents" href="http://elf.cs.pub.ro/poo/laboratoare/junit?do=index" title="Sitemap">
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="http://elf.cs.pub.ro/poo/feed.php">
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="http://elf.cs.pub.ro/poo/feed.php?mode=list&amp;ns=laboratoare">
+<link rel="alternate" type="text/html" title="Plain HTML" href="http://elf.cs.pub.ro/poo/_export/xhtml/laboratoare/junit">
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="http://elf.cs.pub.ro/poo/_export/raw/laboratoare/junit">
+<link rel="canonical" href="http://elf.cs.pub.ro/poo/laboratoare/junit">
+<link rel="stylesheet" type="text/css" href="JUnit%20%5BProgramare%20Orientat%C4%83%20pe%20Obiecte%5D_files/css.css">
+<script type="text/javascript">/*<![CDATA[*/var NS='laboratoare';var JSINFO = {"id":"laboratoare:junit","namespace":"laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="JUnit%20%5BProgramare%20Orientat%C4%83%20pe%20Obiecte%5D_files/js.php"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="shortcut icon" href="http://elf.cs.pub.ro/poo/lib/tpl/dokuwiki/images/favicon.ico">
+<link rel="apple-touch-icon" href="http://elf.cs.pub.ro/poo/lib/tpl/dokuwiki/images/apple-touch-icon.png">
+    </head>
+
+<body>
+    <!--[if lte IE 7 ]><div id="IE7"><![endif]--><!--[if IE 8 ]><div id="IE8"><![endif]-->
+    <div id="dokuwiki__site"><div id="dokuwiki__top" class="dokuwiki site mode_show showSidebar hasSidebar">
+
+        
+<!-- ********** HEADER ********** -->
+<div id="dokuwiki__header"><div class="pad group">
+
+    
+    <div class="headings group">
+        <ul class="a11y skip">
+            <li><a href="#dokuwiki__content">skip to content</a></li>
+        </ul>
+
+        <h1><a href="http://elf.cs.pub.ro/poo/home" accesskey="h" title="[H]"><img src="JUnit%20%5BProgramare%20Orientat%C4%83%20pe%20Obiecte%5D_files/logo.png" alt="" height="64" width="64"> <span>Programare Orientată pe Obiecte</span></a></h1>
+            </div>
+
+    <div class="tools group">
+        <!-- USER TOOLS -->
+                    <div id="dokuwiki__usertools">
+                <h3 class="a11y">User Tools</h3>
+                <ul>
+                    <li><a href="http://elf.cs.pub.ro/poo/laboratoare/junit?do=login&amp;sectok=0fb7263b19fc7e0f07e31062a317b174" class="action login" rel="nofollow" title="Login">Login</a></li>                </ul>
+            </div>
+        
+        <!-- SITE TOOLS -->
+        <div id="dokuwiki__sitetools">
+            <h3 class="a11y">Site Tools</h3>
+            <form action="/poo/home" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input name="do" value="search" type="hidden"><input id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" type="text"><input value="Search" class="button" title="Search" type="submit"><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>            <div class="mobileTools">
+                <form action="/poo/doku.php" method="get" accept-charset="utf-8"><div class="no"><input name="id" value="laboratoare:junit" type="hidden"><select name="do" class="edit quickselect" title="Tools"><option selected="selected" value="">Tools</option><optgroup label="Page Tools"><option value="edit">Show pagesource</option><option value="revisions">Old revisions</option><option value="backlink">Backlinks</option></optgroup><optgroup label="Site Tools"><option value="recent">Recent changes</option><option value="media">Media Manager</option><option value="index">Sitemap</option></optgroup><optgroup label="User Tools"><option value="login">Login</option></optgroup></select><input style="display: none;" value="&gt;" type="submit"></div></form>            </div>
+            <ul>
+                <li><a href="http://elf.cs.pub.ro/poo/laboratoare/junit?do=recent" class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a></li><li><a href="http://elf.cs.pub.ro/poo/laboratoare/junit?do=media&amp;ns=laboratoare" class="action media" rel="nofollow" title="Media Manager">Media Manager</a></li><li><a href="http://elf.cs.pub.ro/poo/laboratoare/junit?do=index" class="action index" accesskey="x" rel="nofollow" title="Sitemap [X]">Sitemap</a></li>            </ul>
+        </div>
+
+    </div>
+
+    <!-- BREADCRUMBS -->
+            <div class="breadcrumbs">
+                            <div class="youarehere"><span class="bchead">You are here: </span><span class="home"><a href="http://elf.cs.pub.ro/poo/home" class="wikilink1" title="home">Programare Orientată pe Obiecte</a></span> » <a href="http://elf.cs.pub.ro/poo/laboratoare/home" class="wikilink1" title="laboratoare:home">Laboratoare</a> » <span class="curid"><a href="http://elf.cs.pub.ro/poo/laboratoare/junit" class="wikilink1" title="laboratoare:junit">JUnit</a></span></div>
+                                </div>
+    
+    
+    <hr class="a11y">
+</div></div><!-- /header -->
+
+        <div class="wrapper group">
+
+                            <!-- ********** ASIDE ********** -->
+                <div id="dokuwiki__aside"><div class="pad include group">
+                    <h3 style="cursor: pointer; display: none;" class="toggle open"><strong><span>−</span></strong>Sidebar</h3>
+                    <div style="" class="content">
+                                                                        
+<p style="">
+<strong>Administrativ</strong>
+</p>
+<ul style="">
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/poo/administrativ/regulament" class="wikilink1" title="administrativ:regulament">Regulament</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/administrativ/echipa" class="wikilink1" title="administrativ:echipa">Echipa</a></div>
+</li>
+</ul>
+
+<p style="">
+<strong>Laboratoare</strong>
+</p>
+<ul style="">
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/java-basics" class="wikilink1" title="laboratoare:java-basics"> Lab 1 - Java Basics</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/constructori-referinte" class="wikilink1" title="laboratoare:constructori-referinte"> Lab 2 - Constructori și referințe</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/agregare-mostenire" class="wikilink1" title="laboratoare:agregare-mostenire"> Lab 3 - Agregare și moștenire</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/clase-abstracte-interfete" class="wikilink1" title="laboratoare:clase-abstracte-interfete"> Lab 4 - Clase abstracte și interfețe</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/clase-interne" class="wikilink1" title="laboratoare:clase-interne"> Lab 5 - Clase interne</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/colectii" class="wikilink1" title="laboratoare:colectii">  Lab 6 - Colecții</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/genericitate" class="wikilink1" title="laboratoare:genericitate"> Lab 7 - Genericitate</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/exceptii" class="wikilink1" title="laboratoare:exceptii"> Lab 8 - Excepții</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/visitor" class="wikilink1" title="laboratoare:visitor"> Lab 9 - Visitor</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/design-patterns" class="wikilink1" title="laboratoare:design-patterns"> Lab 10 - Design Patterns</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/junit" class="wikilink1" title="laboratoare:junit"> Lab 11 - JUnit</a> </div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/recapitulare" class="wikilink1" title="laboratoare:recapitulare"> Lab 12 - Recapitulare</a></div>
+</li>
+</ul>
+
+<p style="">
+<strong>Teme</strong>
+</p>
+<ul style="">
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/poo/teme/tema1" class="wikilink1" title="teme:tema1"> Tema 1 - League of OOP</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/teme/tema2" class="wikilink1" title="teme:tema2"> Tema 2 - Selfie</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/teme/tema3" class="wikilink1" title="teme:tema3"> Tema 3 - Bucket Dictionary</a></div>
+</li>
+</ul>
+
+<p style="">
+<strong>Alte resurse</strong>
+</p>
+<ul style="">
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/poo-java" class="wikilink1" title="laboratoare:poo-java">POO și Java</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/organizare-acces" class="wikilink1" title="laboratoare:organizare-acces">Organizarea surselor și controlul accesului</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/laboratoare/tutorial-doubledispatch" class="wikilink1" title="laboratoare:tutorial-doubledispatch">Double Dispatch - scurt tutorial</a></div>
+</li>
+</ul>
+
+<p style="">
+<strong>Arhiva</strong>
+</p>
+
+<p style="">
+<a href="http://elf.cs.pub.ro/poo/arhiva/teme/2013/index" class="wikilink1" title="arhiva:teme:2013:index">2013-2014</a>
+</p>
+                                            </div>
+                </div></div><!-- /aside -->
+            
+            <!-- ********** CONTENT ********** -->
+            <div id="dokuwiki__content"><div class="pad group">
+
+                <div class="pageId"><span>laboratoare:junit</span></div>
+
+                <div style="min-height: 566px;" class="page group">
+                                                            <!-- wikipage start -->
+                    <!-- TOC START -->
+<div id="dw__toc">
+<h3 style="cursor: pointer;" class="toggle open"><strong><span>−</span></strong>Table of Contents</h3>
+<div style="">
+
+<ul style="" class="toc">
+<li class="level1"><div class="li"><a href="#junit">JUnit</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#obiective">Obiective</a></div></li>
+<li class="level2"><div class="li"><a href="#unit-testing">Unit testing</a></div></li>
+<li class="level2"><div class="li"><a href="#junit1">JUnit</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#exemplu">Exemplu</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#exercitii">Exerciţii</a></div></li>
+<li class="level2"><div class="li"><a href="#resurse">Resurse</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="junit">JUnit</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> Responsabil: Victor Ciurel</div>
+</li>
+<li class="level0"><div class="li"> Data publicării: 15.12.2014</div>
+</li>
+<li class="level0"><div class="li"> Data ultimei modificări: 15.12.2014</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit2" id="obiective">Obiective</h2>
+<div class="level2">
+
+<p>
+Scopul acestui laborator este familiarizarea studenţilor cu noţiunea de <strong>Unit Testing</strong> şi folosirea unui framework <strong>Junit</strong> pentru realizarea testǎrii.
+</p>
+
+</div>
+
+<h2 class="sectionedit3" id="unit-testing">Unit testing</h2>
+<div class="level2">
+
+<p>
+Unit testing-ul s-a impus în ultima perioadă în dezvoltarea proiectelor 
+scrise în limbajul Java şi nu numai, pe măsura apariţiei unor utilitare 
+gratuite de testare a claselor, care au contribuit la creşterea vitezei 
+de programare şi la micşorarea drastică a numărului de bug-uri.
+</p>
+
+<p>
+Printre avantajele folosirii framework-ului JUnit se numără:
+</p>
+<ul>
+<li class="level1"><div class="li"> îmbunătăţirea vitezei de scriere a codului, concomitent cu creşterea calităţii acestuia</div>
+</li>
+<li class="level0"><div class="li"> clasele de test sunt uşor de scris 
+şi modificat pe măsură ce codul sursă se măreşte, putând fi compilate 
+împreună cu codul sursă al proiectului.</div>
+</li>
+<li class="level0"><div class="li"> clasele de test JUnit pot fi rulate automat (în suită), rezultatele fiind vizibile imediat.</div>
+</li>
+<li class="level0"><div class="li"> clasele de test măresc încrederea 
+programatorului în codul sursă scris şi îi permit să urmărească mai uşor
+ cerinţele de implementare ale proiectului</div>
+</li>
+<li class="level0"><div class="li"> testele pot fi scrise înaintea implementǎrii, fapt ce garanteazǎ înţelegerea funcţionalitǎţii de cǎtre dezvoltator</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit4" id="junit1">JUnit</h2>
+<div class="level2">
+
+<p>
+Reprezintǎ un framework de Unit Testing pentru Java. 
+</p>
+
+</div>
+
+<h1 class="sectionedit5" id="exemplu">Exemplu</h1>
+<div class="level1">
+<dl class="code">
+<dt><a href="http://elf.cs.pub.ro/poo/_export/code/laboratoare/junit?codeblock=0" title="Download Snippet" class="mediafile mf_java">Student.java</a></dt>
+<dd><pre class="code java"><span class="kw1">public</span> <span class="kw1">class</span> Student <span class="br0">{</span>
+&nbsp;
+	<span class="kw1">private</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> name<span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">private</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> age<span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">public</span> Student<span class="br0">(</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> name, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> age<span class="br0">)</span> <span class="br0">{</span>
+		<span class="kw1">super</span><span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span>
+		<span class="kw1">this</span>.<span class="me1">name</span> <span class="sy0">=</span> name<span class="sy0">;</span>
+		<span class="kw1">this</span>.<span class="me1">age</span> <span class="sy0">=</span> age<span class="sy0">;</span>
+	<span class="br0">}</span>
+&nbsp;
+	<span class="kw1">public</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> getName<span class="br0">(</span><span class="br0">)</span> <span class="br0">{</span>
+		<span class="kw1">return</span> name<span class="sy0">;</span>
+	<span class="br0">}</span>
+&nbsp;
+	<span class="kw1">public</span> <span class="kw4">void</span> setName<span class="br0">(</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> name<span class="br0">)</span> <span class="br0">{</span>
+		<span class="kw1">this</span>.<span class="me1">name</span> <span class="sy0">=</span> name<span class="sy0">;</span>
+	<span class="br0">}</span>
+&nbsp;
+	<span class="kw1">public</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> getAge<span class="br0">(</span><span class="br0">)</span> <span class="br0">{</span>
+		<span class="kw1">return</span> age<span class="sy0">;</span>
+	<span class="br0">}</span>
+&nbsp;
+	<span class="kw1">public</span> <span class="kw4">void</span> setAge<span class="br0">(</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> age<span class="br0">)</span> <span class="br0">{</span>
+		<span class="kw1">this</span>.<span class="me1">age</span> <span class="sy0">=</span> age<span class="sy0">;</span>
+	<span class="br0">}</span>
+<span class="br0">}</span></pre>
+</dd></dl>
+<dl class="code">
+<dt><a href="http://elf.cs.pub.ro/poo/_export/code/laboratoare/junit?codeblock=1" title="Download Snippet" class="mediafile mf_java">Grupa.java</a></dt>
+<dd><pre class="code java"><span class="kw1">import</span> <span class="co2">java.util.ArrayList</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.util.List</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> Grupa <span class="br0">{</span>
+&nbsp;
+	List<span class="sy0">&lt;</span>Student<span class="sy0">&gt;</span> students<span class="sy0">;</span>
+&nbsp;
+	Grupa <span class="br0">(</span><span class="br0">)</span> <span class="br0">{</span>
+		students <span class="sy0">=</span> <span class="kw1">new</span> ArrayList<span class="sy0">&lt;</span>Student<span class="sy0">&gt;</span><span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span>
+	<span class="br0">}</span>
+&nbsp;
+	<span class="kw1">public</span> List<span class="sy0">&lt;</span>Student<span class="sy0">&gt;</span> getStudents<span class="br0">(</span><span class="br0">)</span> <span class="br0">{</span>
+		<span class="kw1">return</span> students<span class="sy0">;</span>
+	<span class="br0">}</span>
+&nbsp;
+	<span class="kw1">public</span> <span class="kw4">void</span> setStudents<span class="br0">(</span>List<span class="sy0">&lt;</span>Student<span class="sy0">&gt;</span> students<span class="br0">)</span> <span class="br0">{</span>
+		<span class="kw1">this</span>.<span class="me1">students</span> <span class="sy0">=</span> students<span class="sy0">;</span>
+	<span class="br0">}</span>
+&nbsp;
+	<span class="kw1">public</span> <span class="kw4">void</span> addStudent<span class="br0">(</span>Student student<span class="br0">)</span> <span class="br0">{</span>
+		students.<span class="me1">add</span><span class="br0">(</span>student<span class="br0">)</span><span class="sy0">;</span>
+	<span class="br0">}</span>
+&nbsp;
+	<span class="kw1">public</span> Student getStudent<span class="br0">(</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> name<span class="br0">)</span> <span class="br0">{</span>
+		<span class="kw1">for</span> <span class="br0">(</span>Student st <span class="sy0">:</span> students<span class="br0">)</span> <span class="br0">{</span>
+			<span class="kw1">if</span> <span class="br0">(</span><span class="kw2">null</span> <span class="sy0">!=</span> st.<span class="me1">getName</span><span class="br0">(</span><span class="br0">)</span> <span class="sy0">&amp;&amp;</span> st.<span class="me1">getName</span><span class="br0">(</span><span class="br0">)</span>.<span class="me1">equals</span><span class="br0">(</span>name<span class="br0">)</span><span class="br0">)</span> <span class="br0">{</span>
+				<span class="kw1">return</span> st<span class="sy0">;</span>
+			<span class="br0">}</span>
+		<span class="br0">}</span>
+		<span class="kw1">return</span> <span class="kw2">null</span><span class="sy0">;</span>
+	<span class="br0">}</span>
+&nbsp;
+	<span class="kw1">public</span> <span class="kw4">boolean</span> areStudentsInGroup<span class="br0">(</span><span class="br0">)</span> <span class="br0">{</span>
+		<span class="kw1">if</span> <span class="br0">(</span>students.<span class="me1">size</span><span class="br0">(</span><span class="br0">)</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">)</span> <span class="br0">{</span>
+			<span class="kw1">return</span> <span class="kw2">false</span><span class="sy0">;</span>
+		<span class="br0">}</span>
+		<span class="kw1">return</span> <span class="kw2">true</span><span class="sy0">;</span>
+	<span class="br0">}</span>
+&nbsp;
+<span class="br0">}</span></pre>
+</dd></dl>
+<dl class="code">
+<dt><a href="http://elf.cs.pub.ro/poo/_export/code/laboratoare/junit?codeblock=2" title="Download Snippet" class="mediafile mf_java">Test.java</a></dt>
+<dd><pre class="code java"><span class="kw1">import</span> <span class="co2">org.junit.Assert</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.junit.Before</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> Test <span class="br0">{</span>
+	<span class="kw1">private</span> Grupa grupa<span class="sy0">;</span>
+&nbsp;
+	@Before
+	<span class="kw1">public</span> <span class="kw4">void</span> setup<span class="br0">(</span><span class="br0">)</span> <span class="br0">{</span>
+		grupa <span class="sy0">=</span> <span class="kw1">new</span> Grupa<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span>
+	<span class="br0">}</span>
+&nbsp;
+	@org.<span class="me1">junit</span>.<span class="me1">Test</span>
+	<span class="kw1">public</span> <span class="kw4">void</span> testNoStudentInGroup<span class="br0">(</span><span class="br0">)</span> <span class="br0">{</span>
+		<span class="kw1">Assert</span>.<span class="me1">assertEquals</span><span class="br0">(</span><span class="kw2">false</span>, grupa.<span class="me1">areStudentsInGroup</span><span class="br0">(</span><span class="br0">)</span><span class="br0">)</span><span class="sy0">;</span>
+	<span class="br0">}</span>
+&nbsp;
+	@org.<span class="me1">junit</span>.<span class="me1">Test</span>
+	<span class="kw1">public</span> <span class="kw4">void</span> testAddStudent<span class="br0">(</span><span class="br0">)</span> <span class="br0">{</span>
+		Student st <span class="sy0">=</span> <span class="kw1">new</span> Student<span class="br0">(</span><span class="st0">"Elena"</span>, <span class="st0">"11"</span><span class="br0">)</span><span class="sy0">;</span>
+		grupa.<span class="me1">addStudent</span><span class="br0">(</span>st<span class="br0">)</span><span class="sy0">;</span>
+&nbsp;
+		<span class="kw1">Assert</span>.<span class="me1">assertTrue</span><span class="br0">(</span>grupa.<span class="me1">getStudent</span><span class="br0">(</span><span class="st0">"Elena"</span><span class="br0">)</span>.<span class="me1">equals</span><span class="br0">(</span>st<span class="br0">)</span><span class="br0">)</span><span class="sy0">;</span>
+	<span class="br0">}</span>
+&nbsp;
+<span class="br0">}</span></pre>
+</dd></dl>
+
+<p>
+Observaţii:
+</p>
+<ul>
+<li class="level1"><div class="li"> fiecare metodǎ de test are adnotarea: <strong><code>@Test</code></strong></div>
+</li>
+<li class="level0"><div class="li"> metodele <code>setUp</code>(avand adnotarea: <strong><code>@Before</code></strong>) si <code>tearDown</code>(<strong><code>@After</code></strong>)
+ se apeleazǎ înainte, respectiv dupǎ fiecare test. Se întrebuinţeazǎ 
+pentru iniţializarea/eliberarea resurselor ce constituie mediul de 
+testare, evitându-se, totodatǎ, duplicarea codului, şi respectându-se 
+principiul de independentǎ a testelor.</div>
+</li>
+<li class="level0"><div class="li"> pentru compararea rezultatului aşteptat cu rezultatul curent se folosesc apeluri <strong><code>assert</code></strong>:</div>
+<ul>
+<li class="level2"><div class="li"> <code>assertTrue</code></div>
+</li>
+<li class="level2"><div class="li"> <code>assertFalse</code></div>
+</li>
+<li class="level2"><div class="li"> <code>assertEquals</code></div>
+</li>
+<li class="level2"><div class="li"> <code>assertNull</code>/<code>assertNotNull</code></div>
+</li>
+</ul>
+</li>
+<li class="level0"><div class="li"> <strong>Rulare teste</strong>: Click dreapta clasǎ test → <em>Run as</em> → <em>Junit test</em></div>
+</li>
+<li class="level0"><div class="li"> <strong>Rulare test</strong>: Selectare test → click dreapta →  <em>Run as</em> → <em>Junit test</em></div>
+</li>
+</ul>
+
+<p>
+</p><p></p><div class="noteimportant">
+În cadrul laboratorului vom folosi framework-ul Junit adaugand fisierul  <a href="http://sourceforge.net/projects/junit/files/latest/download" class="urlextern" title="http://sourceforge.net/projects/junit/files/latest/download" rel="nofollow"> jar</a> cu acesta la proiectele create.
+<p></p>
+
+<p>
+Pentru a importa un <em>jar</em> într-un proiect din eclipse parcurgeţi urmǎtorii paşi: <em>click dreapta proiect</em> →<em> Build path</em> → <em>Configure build path</em> → <em>Libraries</em> →<em> Add jars (Add external jars)</em>
+</p></div><p></p>
+<p></p>
+
+<p>
+</p><p></p><div class="notetip">
+Câteodată avem nevoie să testăm funcționalitatea unor clase ce folosesc 
+metode din alte clase netestate sau care nu pot fi testate. De asemenea,
+ există cazuri în care vrem sa testăm comportamentul clasei în situații 
+extreme sau foarte greu de replicat (erori de disc, epuizarea spațiului 
+pe disc, obținerea unei anumite valorii în cazul in care folosim 
+generatoare random). Pentru a rezolva ușor aceste necesități putem 
+folosi obiecte de tip <strong>mock</strong>. Aceste obiecte simulează 
+comporatamentul clasei mock-uite și sunt controlate din interiorul unit 
+testelor. Pentru mai multe detalii puteți consulta pagina <a href="http://en.wikipedia.org/wiki/Mock_object" class="urlextern" title="http://en.wikipedia.org/wiki/Mock_object" rel="nofollow">Wikipedia</a>.<br>În Java pentru a implementa mock-uri puteți folosi framework-ul de <strong>JMock</strong>. Un scurt tutorial de instalare si folosire gasiți <a href="http://www.askeygeek.com/jmock-for-beginners/" class="urlextern" title="http://www.askeygeek.com/jmock-for-beginners/" rel="nofollow">aici</a>. Pentru exemple mai detaliate puteți consulta <a href="http://www.jmock.org/cookbook.html" class="urlextern" title="http://www.jmock.org/cookbook.html" rel="nofollow">cookbook-ul</a> pus la dispozitie pe site-ul jmock.org.<br>
+</div><p></p>
+<p></p>
+
+</div>
+
+<h2 class="sectionedit6" id="exercitii">Exerciţii</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> <strong>(5p)</strong> Creaţi clasa  <code>Animal</code> şi clasa <code>Zoo</code>. Clasa <code>Zoo</code> conţine un vector de animale. Implementaţi metodele: <code>addAnimal(Animal a)</code>, <code>removeAnimal(Animal a)</code>, <code>boolean areAnimals(), getAnimals()</code>, <code>size()</code>. Creaţi o clasa <code>Test</code> unde veţi verifica diverse <em class="u">scenarii</em>:</div>
+<ul>
+<li class="level3"><div class="li"> (1p) La rularea fiecǎrei metode veti instanţia clasa <code>Zoo</code>.</div>
+</li>
+<li class="level3"><div class="li"> (1p) Metoda <code>testAddAnimal</code> - adaugă un obiect <code>Animal</code> şi verificǎ daca adǎugarea a avut loc cu succes. Folosiţi: <strong><code>assertEquals</code></strong></div>
+</li>
+<li class="level3"><div class="li"> (1p) Metoda <code>testRemoveAnimal</code> - folosiţi <strong><code>assertTrue</code></strong></div>
+</li>
+<li class="level3"><div class="li"> (1p) Metoda <code>testAreAnimalsInZoo</code> - testul picǎ dacǎ metoda returneazǎ <code>false</code>. <em>Hint</em>: <strong><code>Assert.fail()</code></strong> </div>
+</li>
+<li class="level3"><div class="li"> (1p) Metoda <code>testGetAnimals</code> - adǎugaţi douǎ obiecte <code>Animal</code>. Verificaţi ca adǎugarea a avut loc cu succes. Folosiţi <strong>assertFalse</strong>.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>(5p)</strong> Acest 
+exerciţiu urmǎreşte identificarea unor cazuri de test, strict pe baza 
+specificaţiei, în absenţa accesului la codul sursǎ şi a cunoaşterii 
+modului intern de funcţionare a sistemului. Se considerǎ o clasa <code>GeometricForms</code> avand un constructor ce primeste un String ce poate fi unul din valorile enum-ului <code>Forms</code>.</div>
+<ul>
+<li class="level3"><div class="li"> Adǎugaţi în build path-ul proiectului clasele din scheletul de laborator.</div>
+</li>
+<li class="level3"><div class="li"> Metodele <code>isTriangle</code>, <code>isCircle</code> si <code>isRectangle</code> au drept scop evaluarea stǎrii obiectului <code>GeometricForms</code>.</div>
+</li>
+<li class="level3"><div class="li"> Creaţi un scenariu de testare pentru aceastǎ clasǎ, prin implementarea propriilor cazuri de testare, într-o clasǎ <code>GeometricFormsTest</code>.</div>
+</li>
+<li class="level3"><div class="li"> Construiţi teste specializate, 
+orientate pe o anumitǎ funcţionalitate. De exemplu, în cadrul unui test,
+ verificaţi doar una din cele 3 metode.</div>
+</li>
+<li class="level3"><div class="li"> <pre class="code java"><span class="kw1">public</span> <span class="kw1">enum</span> Forms <span class="br0">{</span>
+   TRIANGLE, CIRCLE, RECTANGLE
+<span class="br0">}</span></pre>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+
+<h2 class="sectionedit7" id="resurse">Resurse</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/poo/_media/arhiva/laboratoare/2013/lab_junit.zip" class="media mediafile mf_zip" title="arhiva:laboratoare:2013:lab_junit.zip (1.3 KB)">Schelet</a> </div>
+</li>
+<li class="level0"><div class="li"> <a href="http://elf.cs.pub.ro/poo/_media/laboratoare/solutii" class="media mediafile mf_ wikilink2" title="laboratoare:solutii">solutii</a></div>
+</li>
+<li class="level0"><div class="li"> <a href="https://github.com/junit-team/junit/wiki/Download-and-Install" class="urlextern" title="https://github.com/junit-team/junit/wiki/Download-and-Install" rel="nofollow"> Junit download</a></div>
+</li>
+</ul>
+
+</div>
+
+                    <!-- wikipage stop -->
+                                    </div>
+
+                <div class="docInfo"><div class="error">LDAP: couldn't connect to LDAP server</div>laboratoare/junit.txt · Last modified: 2014/12/15 13:14 by victor.ciurel</div>
+
+                            </div></div><!-- /content -->
+
+            <hr class="a11y">
+
+            <!-- PAGE ACTIONS -->
+            <div id="dokuwiki__pagetools">
+                <h3 class="a11y">Page Tools</h3>
+                <div class="tools">
+                    <ul>
+                        <li><a href="http://elf.cs.pub.ro/poo/laboratoare/junit?do=edit&amp;rev=0" class="action source" accesskey="v" rel="nofollow" title="Show pagesource [V]"><span>Show pagesource</span></a></li><li><a href="http://elf.cs.pub.ro/poo/laboratoare/junit?do=revisions" class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]"><span>Old revisions</span></a></li><li><a href="http://elf.cs.pub.ro/poo/laboratoare/junit?do=backlink" class="action backlink" rel="nofollow" title="Backlinks"><span>Backlinks</span></a></li><li><a href="#dokuwiki__top" class="action top" accesskey="t" rel="nofollow" title="Back to top [T]"><span>Back to top</span></a></li>                    </ul>
+                </div>
+            </div>
+        </div><!-- /wrapper -->
+
+        
+<!-- ********** FOOTER ********** -->
+<div id="dokuwiki__footer"><div class="pad">
+    
+    <div class="buttons">
+                <a href="http://www.dokuwiki.org/donate" title="Donate"><img src="JUnit%20%5BProgramare%20Orientat%C4%83%20pe%20Obiecte%5D_files/button-donate.gif" alt="Donate" height="15" width="80"></a>
+        <a href="http://www.php.net/" title="Powered by PHP"><img src="JUnit%20%5BProgramare%20Orientat%C4%83%20pe%20Obiecte%5D_files/button-php.gif" alt="Powered by PHP" height="15" width="80"></a>
+        <a href="http://validator.w3.org/check/referer" title="Valid HTML5"><img src="JUnit%20%5BProgramare%20Orientat%C4%83%20pe%20Obiecte%5D_files/button-html5.png" alt="Valid HTML5" height="15" width="80"></a>
+        <a href="http://jigsaw.w3.org/css-validator/check/referer?profile=css3" title="Valid CSS"><img src="JUnit%20%5BProgramare%20Orientat%C4%83%20pe%20Obiecte%5D_files/button-css.png" alt="Valid CSS" height="15" width="80"></a>
+        <a href="http://dokuwiki.org/" title="Driven by DokuWiki"><img src="JUnit%20%5BProgramare%20Orientat%C4%83%20pe%20Obiecte%5D_files/button-dw.png" alt="Driven by DokuWiki" height="15" width="80"></a>
+    </div>
+</div></div><!-- /footer -->
+
+    </div></div><!-- /site -->
+
+    <div class="no"><img src="JUnit%20%5BProgramare%20Orientat%C4%83%20pe%20Obiecte%5D_files/indexer.gif" alt="" height="1" width="2"></div>
+    <div id="screen__mode" class="no"></div>    <!--[if ( lte IE 7 | IE 8 ) ]></div><![endif]-->
+
+
+</body></html>
