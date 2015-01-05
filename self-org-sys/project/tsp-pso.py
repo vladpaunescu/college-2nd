@@ -3,6 +3,7 @@ import random
 import sys
 import numpy as np
 import perm_util as pu
+import matplotlib.pyplot as plt
 
 def generateGraph(nbrNodes):
     graph = []
@@ -59,13 +60,22 @@ class TSP:
 
 class Particle:
 
-    def __init__(self, G, n, v_length):
+    # def __init__(self, G, n, v_length):
+    #     self.G, self.n = G, n
+    #     self.v_length = v_length
+    #     self.perm, self.vs = self.generate()
+    #     self.pbest = (self.get_length(), self.perm)
+    #     print "Particle\n\t{}\n\t{}".format(self.perm, self.vs)
+
+
+    def __init__(self, G, n, v_length, bestPath = None):
         self.G, self.n = G, n
         self.v_length = v_length
         self.perm, self.vs = self.generate()
+        # if bestPath is not None:
+        #     self.perm = bestPath
         self.pbest = (self.get_length(), self.perm)
         print "Particle\n\t{}\n\t{}".format(self.perm, self.vs)
-
 
     def generate(self):
         perm = np.random.permutation(n).tolist()
@@ -111,55 +121,116 @@ class Particle:
 
 class PSO:
 
-    def __init__(self, G, n, part_count, v_length, steps, alpha, beta):
+    def __init__(self, tsp, G, n, part_count, v_length, steps, alpha, beta):
         self.G = G
         self.n, self.v_length = n, v_length
         self.part_count = part_count
         self.gbest = (float("inf"), [])
         self.steps, self.alpha, self.beta = steps, alpha, beta
         self.gama = 1.0
+        self.optimum = tsp
 
         self.particles = [Particle(G, n, v_length) for _ in xrange(part_count)]
+        self.particles[0] = Particle(G, n, v_length, tsp.bestPath)
         for particle in self.particles:
             if particle.pbest[0] < self.gbest:
                 self.gbest = particle.pbest
         print "Gbest {}".format(self.gbest)
 
+        self.errors = []
+        self.gbest_trend = []
+        self.alphas, self.betas, self.gamas = [], [], []
+
+
 
     def run(self):
+        no_improvement_count = 0
         for i in xrange(self.steps):
-          #  print "Epoch {}".format(i)
-            self.update_gbest()
+            #  print "Epoch {}".format(i)
+            self.alphas.append(self.alpha)
+            self.betas.append(self.beta)
+            self.gamas.append(self.gama)
+
+            if not self.update_gbest():
+                no_improvement_count += 1
+            else:
+                no_improvement_count = 0
+
             for particle in self.particles:
                 particle.update_pbest()
                 particle.update_speed(self.alpha, self.beta, self.gama, self.gbest)
                 particle.update_position()
+
+            if no_improvement_count < 20:
                 self.alpha -= 0.002
                 self.beta += 0.002
-                self.gama -=0.0005
+                self.gama -= 0.0005
+            else:
+                self.alpha += 0.002
+                self.beta -= 0.002
+                self.gama +=0.0005
+
 
     def update_gbest(self):
+        improve = False
         for particle in self.particles:
             l = particle.get_length()
             if l < self.gbest[0]:
                 self.gbest = (l, particle.perm)
+                improve = True
+
+        self.gbest_trend.append(self.gbest)
+        self.errors.append(self.gbest[0] - self.optimum.bestPathLength)
+        return improve
+
+
+def plot_errors(pso, directory):
+    fig1 = plt.figure()
+    ax1 = fig1.add_subplot(111)
+    fig1.suptitle("Evolutia erorii")
+    ax1.plot(range(len(pso.gbest_trend)), [gbest[0] for gbest in pso.gbest_trend], label="Global Best trend")
+    ax1.plot(range(len(pso.errors)), pso.errors, label="Error (absolute)")
+    ax1.legend(bbox_to_anchor=(1.05, 1), loc=0, borderaxespad=0.)
+    ax1.autoscale()
+   # plt.savefig("{0}/plot_{1}_absolute".format(directory, thread_id))
+   # plt.clf()
+    fig2 = plt.figure()
+    ax2 = fig2.add_subplot(111)
+    fig2.suptitle("Evolutia alpha beta gama")
+    ax2.plot(range(len(pso.alphas)), pso.alphas, label="Alpha trend")
+    ax2.plot(range(len(pso.betas)), pso.betas, label="Beta trend")
+    ax2.plot(range(len(pso.betas)), pso.gamas, label="Gama trend")
+    ax2.legend(bbox_to_anchor=(1.05, 1), loc=0, borderaxespad=0.)
+    ax2.autoscale()
+    fig1.savefig("{0}/plot_error".format(directory))
+    fig2.savefig("{0}/plot_alphas".format(directory))
+    plt.show()
+
+
+
+
 
 if __name__ == "__main__":
 
     dims = [9, 10, 11]
-    part_count = [500, 100, 100]
+    part_count = [1000, 100, 100]
 
     for i in range(len(dims)):
         n = dims[i]
         G = generateGraph(n)
+        printMatrix(G)
         tsp = TSP(n, G)
         tsp.findTSPPath()
         optimalCost = tsp.bestPathLength
         print 'optimal cost: ', optimalCost, 'sol: ', tsp.bestPath
 
-        pso = PSO(G, n, part_count[i], 2, 1000, 0.8, 0.2)
+        pso = PSO(tsp, G, n, part_count[i], 3, 100, 0.8, 0.2)
         pso.run()
         print pso.gbest
+        print pso.gamas
+        print pso.alphas
+        print pso.betas
+        plot_errors(pso, "/home/vlad/git/college-2nd/self-org-sys/project/plots")
         break
 
 
