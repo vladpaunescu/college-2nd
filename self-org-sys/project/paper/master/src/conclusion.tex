@@ -1,0 +1,10 @@
+We achieve both good recognition (classification) rate, and detection rate. We still have to improve our detection in order to minimize the number of false positives triggered. One idea to prevent this would be to reinsert in the training set that false positive each time we encounter one, and retrain the model.
+
+We still have to decide what strategy to use in order to highlight each car with only one bounding box.
+
+However, our system performs well, because we only have one category to detect, namely cars. While initially used for pedestrian detection, HOG proves a very robust method for car detection.
+
+From our previous release, we expanded detection for cars photographed from 3 angles - rear, side, and front. We also changed the voting scheme to non-maximum-suppression method of selecting the detection candidates. 
+
+We plan to improve the system to make it more robust to false positives, and to improve the detection speed, in order to eventually make the system real-time.
+

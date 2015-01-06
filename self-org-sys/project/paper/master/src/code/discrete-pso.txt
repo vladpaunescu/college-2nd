@@ -1,0 +1,22 @@
+procedure Discrete_PSO
+	/* Define initial probabilities for particles’ moves:*/
+	pr 1 ← a 1 /*to follow its own way*/
+	pr 2 ← a 2 /*to go towards pbest*/
+	pr 3 ← a 3 /*to go towards gbest*/
+	/* a 1 + a 2 + a 3 =1 */
+	Initialize the population of particles
+	do
+		for each particle p
+			value p ← Evaluate(x p )
+			if (value(x p ) < value(pbest p )) then
+				pbest p ← x p
+			if (value(x p ) < value(gbest) ) then
+				gbest ← x p
+			end_for
+		for each particle p
+			velocity p ← define_velocity(pr 1 , pr 2 , pr 3 )
+			x p ← update(x p ,velocity p )
+		end_for
+		/* Update probabilities*/
+		pr 1 = pr 1 ×0.95; pr 2 = pr 2 ×1.01; pr 3 = 1-( pr 1 + pr 2 )
+	while (a stop criterion is not satisfied)

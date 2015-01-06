@@ -1,0 +1,43 @@
+% vim: set tw=78 sts=2 sw=2 ts=8 aw et ai:
+\subsection{Traveling Salesman Problem}
+
+TSP can be modelled as an undirected weighted graph, such that cities are the graph's vertices, paths are the graph's edges, and a path's distance is the edge's length. It is a minimization problem starting and finishing at a specified vertex after having visited each other vertex exactly once. Often, the model is a complete graph (i.e. each pair of vertices is connected by an edge). If no path exists between two cities, adding an arbitrarily long edge will complete the graph without affecting the optimal tour.
+
+In the symmetric TSP, the distance between two cities is the same in each opposite direction, forming an undirected graph. This symmetry halves the number of possible solutions. In the asymmetric TSP, paths may not exist in both directions or the distances might be different, forming a directed graph. Traffic collisions, one-way streets, and airfares for cities with different departure and arrival fees are examples of how this symmetry could break down.
+
+\subsection{Computational Complexity}
+
+The problem has been shown to be NP-hard (more precisely, it is complete for the complexity class FPNP; see function problem), and the decision problem version ("given the costs and a number x, decide whether there is a round-trip route cheaper than x") is NP-complete. The problem remains NP-hard even for the case when the cities are in the plane with Euclidean distances, as well as in a number of other restrictive cases. Removing the condition of visiting each city "only once" does not remove the NP-hardness, since it is easily seen that in the planar case there is an optimal tour that visits each city only once (otherwise, by the triangle inequality, a shortcut that skips a repeated visit would not increase the tour length).
+
+The brute force algorithm implies generation all permutations of the cites, and hence has a time complexity of $O(n!)$.
+
+\subsection{Ant Colony Optimization}
+
+The TSP is extensively studied in literature and has attracted since
+a long time a considerable amount of research effort. The TSP also plays an
+important role in Ant Colony Optimization since the first ACO algorithm, called Ant System as well as many of the subsequently proposed ACO algorithms  have initially been applied to the TSP. The TSP was chosen for many reasons:
+
+\begin{itemize}
+ \item it is a problem to which ACO algorithms are easily applied
+ \item it is an N P-hard optimization problem
+ \item it is a standard test-bed for new algorithmic ideas and a good performance on the TSP is often taken as a proof of their usefulness
+ \item it is easily understandable, so that the algorithm behaviour is not obscured by too many technicalities.
+\end{itemize}
+
+This algorithm is a member of the ant colony algorithms family, in swarm intelligence methods, and it constitutes some metaheuristic optimizations. Initially proposed by Marco Dorigo in 1992 in his PhD thesis, the first algorithm was aiming to search for an optimal path in a graph, based on the behavior of ants seeking a path between their colony and a source of food. The original idea has since diversified to solve a wider class of numerical problems, and as a result, several problems have emerged, drawing on various aspects of the behavior of ants.
+
+In \cite{Dorigo06antcolony}, the authors analyse the Ant Colony Optimization metaheuristic applied for TSP.
+
+
+\subsection{Particle Swarm Optimization}
+
+In computer science, particle swarm optimization (PSO) is a computational method that optimizes a problem by iteratively trying to improve a candidate solution with regard to a given measure of quality. PSO optimizes a problem by having a population of candidate solutions, here dubbed particles, and moving these particles around in the search-space according to simple mathematical formulae over the particle's position and velocity. Each particle's movement is influenced by its local best known position but, is also guided toward the best known positions in the search-space, which are updated as better positions are found by other particles. This is expected to move the swarm toward the best solutions.
+
+In this paper, we have applied a variant of Particle Swarm Optimization for discrete optimization problems, which uses permutations as solution candidates, and swap sequences as velocities.
+
+In their paper from 2008 \cite{PSO08tsp}, Goldbarg and Souza present a method for applying discrete PSO for TSP. They introduce a new type of operator for concatenation of swap sequences, and a probabilistic method for velocity update, based on 3 compoentes - particle speed, speed towards local optimum, and speed towards global optimum.
+
+SO for permutation problems is investigated by several researchers. In several of these research works the TSP is the target problem. Hu et al. (2003) define velocity as a vector of probabilities in which each element corresponds to the probability of exchanging two elements of the permutation vector that
+represents a given particle position. Pairwise exchanging operations, also called 2-swap or 2-exchange, are very popular neighborhoods in local search algorithms for permutation problems. Let V be the velocity of a particle whose position is given by the permutation vector P. Given integers i and j, V[i] is the probability of elements P[i] and P[j] be exchanged.
+The element P[j] corresponds to P nbest [i], where P nbest is the vector that represents the permutation associated with the position of the best neighbor of the considered particle. The authors introduce a mutation operator in order to avoid premature convergence of their algorithm. The mutation operator does a 2-swap move with two elements chosen at random
+in the considered permutation vector.

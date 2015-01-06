@@ -1,0 +1,16 @@
+% vim: set tw=78 sts=2 sw=2 ts=8 aw et ai:
+
+
+I've implemented the exact solution for the Travelling Salesman Problem - with opimized backtraking.
+I've also implemented the standard Ant Colony Optimization algorithm and applied it in order to find the best parametrs alpha, beta, rho.
+Lastly, I've implemented the discrete variant of Particle Swarm Optimization, that will be presented below:
+
+\subsection{Discrete PSO Variant}
+
+The solution of a particle is a permutation of all cities Example: (0, 3, 2, 1, 4).
+
+A swap operation (i,j) exchanges the elements i, j in the permuation.
+The velocity of a particle is a sequence of swap operators.
+Velocity examples: – swap operator (SO)= SO(1,2) //swap first visited city with the second visited city – swap sequence (SS)=(SO(1,2,), SO(5,4), SO(5,1))
+
+
