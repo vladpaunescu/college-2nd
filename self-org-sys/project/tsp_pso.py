@@ -1,9 +1,11 @@
-from duplicity.pexpect import searcher_re
 import random
 import sys
 import numpy as np
 import perm_util as pu
 import matplotlib.pyplot as plt
+import tsp_aco
+import datetime
+
 
 def generateGraph(nbrNodes):
     graph = []
@@ -207,25 +209,60 @@ def plot_errors(pso, directory):
     plt.show()
 
 
+def experiment_aco(G, Q, m, NCmax, alpha, beta, rho, n, optimalCost):
+    bestCost = sys.maxint
+    bestSol = []
+
+    bestTime = None
+    for ex in range(10):
+        start = datetime.datetime.now()
+        cost, sol = tsp_aco.TSPants(alpha, beta, rho, Q, G, m, n, NCmax, optimalCost)
+        end = datetime.datetime.now()
+        delta = end-start
+        if bestTime is None or delta.microseconds < bestTime.microseconds:
+            bestTime = delta
+        if cost < bestCost:
+            bestCost = cost
+            bestSol = sol[:]
+        #print cost, sol
+    error = bestCost - optimalCost
+    return error, bestTime
 
 
 
 if __name__ == "__main__":
 
-    dims = [9, 10, 11]
-    part_count = [1000, 100, 100]
+    dims = [9]
+    part_count = [500, 100, 100]
+    Q, m, NCmax = 0.7, 15, 30
+    alpha, beta, rho = 2, 1.5, 0.01
+
 
     for i in range(len(dims)):
         n = dims[i]
         G = generateGraph(n)
         printMatrix(G)
+        start = datetime.datetime.now()
         tsp = TSP(n, G)
         tsp.findTSPPath()
+        end = datetime.datetime.now()
+        time1 = end - start
+
         optimalCost = tsp.bestPathLength
         print 'optimal cost: ', optimalCost, 'sol: ', tsp.bestPath
 
+        error, time2 = experiment_aco(G, Q, m, NCmax, alpha, beta, rho, n, optimalCost)
+
+        start = datetime.datetime.now()
         pso = PSO(tsp, G, n, part_count[i], 3, 100, 0.8, 0.2)
         pso.run()
+        end = datetime.datetime.now()
+        time3 = end - start
+
+
+        print "Times {} {} {}".format(time1.microseconds/1000,
+                                      time2.microseconds/1000, time3.microseconds/ 1000)
+
         print pso.gbest
         print pso.gamas
         print pso.alphas
