@@ -10,6 +10,9 @@ URL_BASE = "https://ajax.googleapis.com/ajax/services/search/images"
 import urllib2
 import simplejson
 
+from cache import *
+import shutil
+
 
 def get_page(url):
     req = urllib2.Request(url, None)
@@ -21,10 +24,19 @@ def get_page(url):
     html = response.read()
     with open('img.jpg', 'wb') as f:
         f.write(html)
+
     return html
 
 
 def search_image(words):
+
+    print '>>>search image for: ', words
+    img = getImage(words)
+    if img is not None:
+        print 'found image in cache: ', img
+        shutil.copyfile(img, 'img.jpg')
+        return img
+
     query = urllib.urlencode({'v': '1.0',
                               "q": " ".join(words),
                               'rsz': '8',
@@ -32,9 +44,13 @@ def search_image(words):
     print query
     url = URL_BASE + '?' + query
     print url
-    return get_page(url)
 
+    ret = get_page(url)
+    name = "_".join(words)
+    addToCache(name, name + '.jpg')
+    shutil.copyfile('img.jpg', './images/' + name + '.jpg')
+    return ret
 
 if __name__ == "__main__":
-    search_image(['water', 'park'])
+    search_image(['juice', 'lemon'])
 
