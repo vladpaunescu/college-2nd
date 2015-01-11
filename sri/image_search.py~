@@ -52,5 +52,5 @@ def search_image(words):
     return ret
 
 if __name__ == "__main__":
-    search_image(['forest'])
+    search_image(['juice', 'lemon'])
 

@@ -46,9 +46,9 @@ def search_image(words):
     print url
 
     ret = get_page(url)
-    name = "_".join(words)
-    addToCache(name, name + '.jpg')
-    shutil.copyfile('img.jpg', './images/' + name + '.jpg')
+    name = "_".join(words) + '.jpg'
+    addToCache(" ".join(words), name)
+    shutil.copyfile('img.jpg', './images/' + name)
     return ret
 
 if __name__ == "__main__":

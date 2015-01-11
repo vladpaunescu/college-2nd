@@ -50,6 +50,11 @@ def getSynonims(word):
 
 def getImage(words):
     d = load( open( "cache.p", "rb" ) )
+    
+    s = " ".join(words)
+
+    if s in d:
+        return './images/' + d[s]
 
     for word in words:
         if word in d:
@@ -65,7 +70,7 @@ def getImage(words):
 #syns = getSynonims('sleep')
 #print syns
 
-addToCache('water', 'water.jpg')
+#addToCache('water', 'water.jpg')
 #buildCache()
 displayCache()
 #addToCache('bed', 'bed.jpg')
