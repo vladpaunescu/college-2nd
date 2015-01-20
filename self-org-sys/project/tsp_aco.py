@@ -149,7 +149,8 @@ def TSPants(alpha, beta, rho, Q, G, m, n, NCmax, optimalCost, tetha0 = 0.1):
     #print '------------------------'
     print 'solution: ', bestSol
     #print 'cost: ', bestSolCost
-    print 'error: ', bestSolCost - optimalCost
+    if optimalCost is not None:
+        print 'error: ', bestSolCost - optimalCost
 
     return [bestSolCost, bestSol]
 

@@ -73,13 +73,14 @@ class Particle:
     def __init__(self, G, n, v_length, bestPath = None):
         self.G, self.n = G, n
         self.v_length = v_length
-        self.perm, self.vs = self.generate()
+        self.perm, self.vs = self.generate(n)
         # if bestPath is not None:
         #     self.perm = bestPath
         self.pbest = (self.get_length(), self.perm)
-        print "Particle\n\t{}\n\t{}".format(self.perm, self.vs)
+       # print "Particle\n\t{}\n\t{}".format(self.perm, self.vs)
 
-    def generate(self):
+
+    def generate(self, n):
         perm = np.random.permutation(n).tolist()
         vs = []
         for _ in xrange(self.v_length):
@@ -133,7 +134,10 @@ class PSO:
         self.optimum = tsp
 
         self.particles = [Particle(G, n, v_length) for _ in xrange(part_count)]
-        self.particles[0] = Particle(G, n, v_length, tsp.bestPath)
+        if tsp is not None:
+            self.particles[0] = Particle(G, n, v_length, tsp.bestPath)
+        else:
+            self.particles[0] = Particle(G, n, v_length)
         for particle in self.particles:
             if particle.pbest[0] < self.gbest:
                 self.gbest = particle.pbest
@@ -145,7 +149,7 @@ class PSO:
 
 
 
-    def run(self):
+    def run(self, improve = False):
         no_improvement_count = 0
         for i in xrange(self.steps):
             #  print "Epoch {}".format(i)
@@ -162,15 +166,19 @@ class PSO:
                 particle.update_pbest()
                 particle.update_speed(self.alpha, self.beta, self.gama, self.gbest)
                 particle.update_position()
+            if improve:
+                self.update_params(no_improvement_count)
 
-            if no_improvement_count < 20:
-                self.alpha -= 0.002
-                self.beta += 0.002
-                self.gama -= 0.0005
-            else:
-                self.alpha += 0.002
-                self.beta -= 0.002
-                self.gama +=0.0005
+
+    def update_params(self, no_improvement_count):
+        if no_improvement_count < 20:
+            self.alpha -= 0.002
+            self.beta += 0.002
+            self.gama -= 0.0005
+        else:
+            self.alpha += 0.002
+            self.beta -= 0.002
+            self.gama += 0.0005
 
 
     def update_gbest(self):
@@ -182,7 +190,8 @@ class PSO:
                 improve = True
 
         self.gbest_trend.append(self.gbest)
-        self.errors.append(self.gbest[0] - self.optimum.bestPathLength)
+        if self.optimum is not None:
+            self.errors.append(self.gbest[0] - self.optimum.bestPathLength)
         return improve
 
 
@@ -209,66 +218,126 @@ def plot_errors(pso, directory):
     plt.show()
 
 
-def experiment_aco(G, Q, m, NCmax, alpha, beta, rho, n, optimalCost):
+def experiment_aco(G, Q, m, NCmax, alpha, beta, rho, n, optimal_cost):
     bestCost = sys.maxint
     bestSol = []
 
     bestTime = None
     for ex in range(10):
         start = datetime.datetime.now()
-        cost, sol = tsp_aco.TSPants(alpha, beta, rho, Q, G, m, n, NCmax, optimalCost)
+        cost, sol = tsp_aco.TSPants(alpha, beta, rho, Q, G, m, n, NCmax, optimal_cost)
         end = datetime.datetime.now()
         delta = end-start
+        print delta.microseconds
         if bestTime is None or delta.microseconds < bestTime.microseconds:
             bestTime = delta
         if cost < bestCost:
             bestCost = cost
             bestSol = sol[:]
         #print cost, sol
-    error = bestCost - optimalCost
-    return error, bestTime
+    error = bestCost - optimal_cost if optimal_cost is not None else 0
+    return bestCost, error, bestTime.microseconds
 
+def experiment_pso(tsp, G, n, part_count, improve = False):
+    print "Running PSO with improvement = {}".format(improve)
+    optimal_cost = tsp.bestPathLength if tsp is not None else None
+    bestCost = sys.maxint
+    bestSol = []
 
+    bestTime = None
+    for ex in range(3):
+        start = datetime.datetime.now()
+        pso = PSO(tsp, G, n, part_count, 3, 100, 0.8, 0.2)
+        pso.run(improve)
+        end = datetime.datetime.now()
+        delta = end - start
+        print delta.microseconds
+        cost = pso.gbest[0]
+        if bestTime is None or delta.microseconds < bestTime.microseconds:
+            bestTime = delta
+        if cost < bestCost:
+            bestCost = cost
+        #print cost, sol
+        if optimal_cost is not None:
+            print "Experiment {}: (gbest, optimum, error) = ({}, {}, {})".format(
+                ex, cost, optimal_cost, cost - optimal_cost)
+        else:
+            print "Experiment {}: gbest = {}".format(
+                ex, cost)
 
-if __name__ == "__main__":
+    error = bestCost - optimal_cost if optimal_cost is not None else 0
+    return bestCost, error, bestTime.microseconds
 
-    dims = [9]
+def run_heuristic():
+    dims = [12]
     part_count = [500, 100, 100]
     Q, m, NCmax = 0.7, 15, 30
     alpha, beta, rho = 2, 1.5, 0.01
-
+    cost_bkt = None
+    times = []
+    costs = []
 
     for i in range(len(dims)):
         n = dims[i]
         G = generateGraph(n)
         printMatrix(G)
-        start = datetime.datetime.now()
-        tsp = TSP(n, G)
-        tsp.findTSPPath()
-        end = datetime.datetime.now()
-        time1 = end - start
 
-        optimalCost = tsp.bestPathLength
-        print 'optimal cost: ', optimalCost, 'sol: ', tsp.bestPath
+        cost_aco, error_aco, time_aco = experiment_aco(G, Q, m, NCmax, alpha, beta, rho, n, cost_bkt)
+        cost_pso1, _, time_pso1 = experiment_pso(None, G, n, part_count[i], improve=False)
+        cost_pso2, _, time_pso2 = experiment_pso(None, G, n, part_count[i], improve=True)
 
-        error, time2 = experiment_aco(G, Q, m, NCmax, alpha, beta, rho, n, optimalCost)
+        times.append((time_aco, time_pso1, time_pso2))
+        costs.append((cost_aco, cost_pso1, cost_pso2))
 
-        start = datetime.datetime.now()
-        pso = PSO(tsp, G, n, part_count[i], 3, 100, 0.8, 0.2)
-        pso.run()
-        end = datetime.datetime.now()
-        time3 = end - start
+    print times
+    print costs
+
+if __name__ == "__main__":
+
+    run_heuristic()
 
 
-        print "Times {} {} {}".format(time1.microseconds/1000,
-                                      time2.microseconds/1000, time3.microseconds/ 1000)
-
-        print pso.gbest
-        print pso.gamas
-        print pso.alphas
-        print pso.betas
-        plot_errors(pso, "/home/vlad/git/college-2nd/self-org-sys/project/plots")
-        break
+    # dims = [9]
+    # part_count = [500, 100, 100]
+    # Q, m, NCmax = 0.7, 15, 30
+    # alpha, beta, rho = 2, 1.5, 0.01
+    #
+    # times = []
+    # errors = []
+    # costs = []
+    #
+    # for i in range(len(dims)):
+    #     n = dims[i]
+    #     G = generateGraph(n)
+    #     printMatrix(G)
+    #     start = datetime.datetime.now()
+    #     tsp = TSP(n, G)
+    #     tsp.findTSPPath()
+    #     end = datetime.datetime.now()
+    #     time_bkt = end - start
+    #     cost_bkt = tsp.bestPathLength
+    #     print 'optimal cost: ', cost_bkt, 'sol: ', tsp.bestPath
+    #
+    #     cost_aco, error_aco, time_aco = experiment_aco(G, Q, m, NCmax, alpha, beta, rho, n, cost_bkt)
+    #     cost_pso1, error_pso1, time_pso1 = experiment_pso(cost_bkt, improve=False)
+    #     cost_pso2, error_pso2, time_pso2 = experiment_pso(cost_bkt, improve=True)
+    #
+    #     times.append((time_bkt.microseconds, time_aco, time_pso1, time_pso2))
+    #     errors.append((error_aco, error_pso1, error_pso2))
+    #     print times
+    #     print errors
+    #
+    #
+    #
+    #     # print "Times {} {} {}".format(time1.microseconds/1000,
+    #     #                               time2.microseconds/1000, time3.microseconds/ 1000)
+    #     #
+    #     # print pso.gbest
+    #     # print pso.gamas
+    #     # print pso.alphas
+    #     # print pso.betas
+    #     # plot_errors(pso, "/home/vlad/git/college-2nd/self-org-sys/project/plots")
+    #     break
 
 
 
