@@ -1,0 +1,50 @@
+PSO for permutation problems is investigated by several researchers. In several of these research works the TSP is the target problem.
+Hu et al. (2003) define velocity as a vector of probabilities in which each element corresponds to the probability of exchanging two elements of the permutation vector that represents a given particle position. Pairwise exchanging operations, also called 2-swap or 2-exchange, are very popular neighborhoods in local search algorithms for permutation problems. Let V be the velocity of a particle whose position is given by the permutation vector P. Given integers i and j, V[i] is the probability of elements P[i] and P[j] be exchanged. 
+
+The element P[j] corresponds to P nbest [i], where P nbest is the vector that represents the permutation associated with the position of the best neighbor of the considered particle.
+
+The authors introduce a mutation operator in order to avoid premature convergence of their algorithm. The mutation operator does a 2-swap move with two elements chosen at random in the considered permutation vector.
+
+Another approach is proposed by Clerc (2004) that utilizes the Traveling Salesman Problem to illustrate the PSO concepts for discrete optimization problems. In the following we list the basic ingredients Clerc (2004) states that are necessary to construct a PSO algorithm for
+discrete optimization problems:
+
+\begin{itemize}
+\item a search space, $S = { s_i }$
+\item an objective function f on S, such that $f(s_i) = c_i$
+\item a semi-order on $C = {c_i }$, such that for every $c_i , c_j ∈ C$, we can establish whether $c_i ≥ c_j$ or $c_j ≥ c_i$
+\item a distance d in the search space, in case we want to consider physical neighborhoods.
+\end{itemize}
+
+S may be a finite set of states and f a discrete function, and, if it is possible to define particles’ positions, velocity and ways to move a particle from one position to another, it is
+possible to use PSO. Clerc (2004) presents also some operations with position and velocity such as: the opposite of a velocity, the addition of position and velocity (move), the subtraction of two positions, the addition and subtraction of two velocities and the multiplication of velocity by a constant. A distance is also defined to be utilized with
+physical neighborhoods.
+
+The positions are defined as TSP tours represented in vectors of permutations of the |N| vertices of the graph correspondent to the considered instance. These vertices are also referred as cities, and the position of a particle is represented by a sequence $(n_1 , ..., n_{|N|}, n_{|N|+1})$, $n_1 = n_{|N|+1}$. The value assigned to each particle is calculated with the TSP objective function, thus corresponding to the tour length. The velocity is defined as a list of pairs (i,j), where i and j are the indices of the elements of the permutation vector that will be exchanged. This approach was applied to tackle the real problem of finding out the best path for drilling operations (Onwubolu \& Clerc, 2004). 
+
+
+Goldbarg et al. (2006a, 2006b) define the discrete velocity of a particla as follow. $v_1$ is a unary velocity operator, $v_2$ and $v_3$ are binary velocity operators. 
+
+The probabilities $p_0$, $p_1$ and $p_2$ have the following meaning:
+
+\begin{itemize}
+
+\item ${p_0}$ is the probability of a particle to follow its own way
+\item ${p_1}$ is the probability of a particle to go to its personal best
+\item ${p_2}$ is the probability of a particle to go to global best
+\end{itemize}
+
+These probabilities have the property that $p_0 + p_1 + p_2 = 1$.
+
+The	solution of a particle is a	permutation	of al cities. The velocity of a	 particle is	 a	sequence	 of	swap	 operators, for instance [(2,4), (1,3)].
+
+The probability that all swap operators in swap sequence $(pbest - x(t-1))$ are included in the updated velocity is $p_1$. 
+
+The probability that all swap operators in swap sequence $(gbest - x(t-1))$ are included in the updated velocity is $p_2$.
+
+The equation for velocity update is as follows:
+
+$$
+v_(t) = p_0 v_{0}(x_p(t-1)) \oplus p_1 v_1(pbest_{p}(t-1),x_{p}(t-1)) \oplus p_2 v_2(gbest, x_{p}(t-1))
+$$
+
+Initially, a high value is set to p_{0} , the probability of particle p to follow its own way, a lower value is set to p_{1} , the probability of particle p goes towards pbest p and the lowest value is associated with the third option, to go towards gbest. The algorithm utilizes the concept of social neighborhood and the gbest p of all particles is associated with the best current solution, gbest. The initial values set to $pr_1$ , $pr_2$ and $pr_3$ are 0.9, 0.05 and 0.05, respectively. As the algorithm runs, $pr_1$ is decreased and the other probabilities are increased. At the final iterations, the highest value is associated with the option of going towards gbest and the lowest probability is associated with the first move option.

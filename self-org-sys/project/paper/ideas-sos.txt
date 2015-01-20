@@ -1,0 +1,11 @@
+1. Intro
+2. State of the art
+3. PSO discret
+4. Contributie
+5. Rezultate experimentale: parametri, rezultate, interpretare
+6. Concluzii
+
+Tabele BKT ACO PSO PSO cu optim eroare si timp 
+7- 11 BKT
+12 - 20 fara Bkt
+

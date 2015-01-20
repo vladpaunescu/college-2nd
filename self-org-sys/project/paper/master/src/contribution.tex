@@ -1,0 +1,9 @@
+I did 2 contributions to the discrete PSO variant:
+
+\begin{enumerate}
+
+\item dropped the mutation phase, as it seemed not be consistent with the PSO idea whatsover. It is mostly from the genetic variant of the TSP solver heuristic, so I decided to experiment without it.
+
+\item I noticed that very often the particles were stuck to some local optimum, the current global best not being the optimum best. After a number, of iterations the probability of every particle to move towards the global best so far increases dramatically. So, I decided to test if no solution improvement is being made after a predefined number of consecutive iterations, and reverse the probabilites update if so.
+
+\end{enumerate}
